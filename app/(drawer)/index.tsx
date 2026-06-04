@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: 'space-between',
     padding: 10,
     gap: 10,
   },
@@ -142,6 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#e8e8e8",
+    marginBottom: 10,
   },
   gridLabel: { fontSize: 14, fontWeight: "600", color: "#1a1a2e" },
 });

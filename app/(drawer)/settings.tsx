@@ -191,7 +191,6 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: '600',
         color: '#999',
-
         textTransform: 'uppercase',
         marginBottom: 10,
         marginTop: 8,

@@ -1,7 +1,7 @@
 import AirtelLogo from "@/components/payment/AirtelLogo";
 import MVolaLogo from "@/components/payment/MVolaLogo";
 import OrangeLogo from "@/components/payment/OrangeLogo";
-import { PaymentMethod } from "@/types/payment";
+import { PaymentMethod } from "@/types/payments";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface Props {

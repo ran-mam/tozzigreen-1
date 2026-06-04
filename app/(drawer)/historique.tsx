@@ -1,26 +1,29 @@
 import TopBar from "@/components/layout/TopBar";
 import { Colors } from "@/constants/Colors";
+import { useRouter } from "expo-router";
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const DATA: Record<string, { ref: string; date?: string; montant: string }[]> =
-  {
-    "Juin 2026": [
-      { ref: "1234098", date: "10/06/2026", montant: "24 300 Ar" },
-      { ref: "1234095", date: "26/06/2026", montant: "34 300 Ar" },
-    ],
-    "Juillet 2026": [
-      { ref: "2234098", montant: "24 300 Ar" },
-      { ref: "2234095", montant: "34 300 Ar" },
-    ],
-  };
+{
+  "Juin 2026": [
+    { ref: "1234098", date: "10/06/2026", montant: "24 300 Ar" },
+    { ref: "1234095", date: "26/06/2026", montant: "34 300 Ar" },
+  ],
+  "Juillet 2026": [
+    { ref: "2234098", montant: "24 300 Ar" },
+    { ref: "2234095", montant: "34 300 Ar" },
+  ],
+};
 
 export default function HistoriqueScreen() {
+  const router = useRouter();
+
   return (
     <View style={styles.screen}>
       <TopBar />
@@ -39,16 +42,25 @@ export default function HistoriqueScreen() {
                 </View>
                 <View style={styles.right}>
                   <Text style={styles.montant}>{b.montant}</Text>
-                  <TouchableOpacity style={styles.detailBtn}>
-                    <Text style={styles.detailText}>Voir détail</Text>
-                  </TouchableOpacity>
-                </View>
+                  <TouchableOpacity
+                    style={styles.detailBtn}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/(drawer)/historique_detail" as any,
+                        params: { ref: b.ref },
+                      })
+                    }
+                  >
+                  <Text style={styles.detailText}>Voir détail</Text>
+                </TouchableOpacity>
               </View>
-            ))}
-          </View>
+              </View>
         ))}
-      </ScrollView>
     </View>
+  ))
+}
+      </ScrollView >
+    </View >
   );
 }
 
