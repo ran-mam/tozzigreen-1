@@ -38,18 +38,13 @@ export default function AssistanceScreen() {
             {/* Contact rapide */}
             <View style={styles.contactRow}>
                 <TouchableOpacity style={styles.contactBtn} onPress={handleCall}>
-                    <Feather name="phone" size={24} color={Colors.primary} />
+                    <Feather name="phone" size={32} color={Colors.primary} />
                     <Text style={styles.contactLabel}>Appeler</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.contactBtn} onPress={handleWhatsApp}>
-                    <Feather name="message-circle" size={24} color="#25D366" />
+                    <Feather name="message-circle" size={32} color="#25D366" />
                     <Text style={styles.contactLabel}>WhatsApp</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.contactBtn}>
-                    <Feather name="mail" size={24} color="#EA4335" />
-                    <Text style={styles.contactLabel}>Email</Text>
                 </TouchableOpacity>
             </View>
 
@@ -61,7 +56,7 @@ export default function AssistanceScreen() {
                     <Feather name="chevron-down" size={20} color="#999" />
                 </TouchableOpacity>
             ))}
-            
+
             {/* Message */}
             <Text style={styles.sectionTitle}>Envoyer un message</Text>
             <TextInput
@@ -103,18 +98,22 @@ const styles = StyleSheet.create({
     subtitle: { fontSize: 14, color: '#666', marginBottom: 24 },
     contactRow: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginBottom: 32
+        justifyContent: 'center',
+        gap: 40,
+        marginBottom: 32,
     },
     contactBtn: {
         alignItems: 'center',
-        gap: 8,
-        padding: 16
+        gap: 12,
+        padding: 24,
+        backgroundColor: '#f9f9f9',
+        borderRadius: 16,
+        width: 130,
     },
     contactLabel: {
-        fontSize: 13,
-        fontWeight: '500',
-        color: '#333'
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#333',
     },
     sectionTitle: {
         fontSize: 16,
@@ -138,7 +137,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingVertical: 14,
         alignItems: 'center',
-
         marginBottom: 20,
     },
     sendText: {
