@@ -1,7 +1,7 @@
 import { getFactureByRef } from "@/components/data/historique";
 import TopBar from "@/components/layout/TopBar";
 import { Colors } from "@/constants/Colors";
-
+import { useTheme } from "@/context/ThemeContext";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ScrollView,
@@ -14,17 +14,27 @@ import {
 export default function FactureDetailScreen() {
   const { ref } = useLocalSearchParams<{ ref: string }>();
   const router = useRouter();
+  const { theme } = useTheme();
+  const themeColors = Colors[theme];
 
   const facture = ref ? getFactureByRef(ref) : undefined;
 
   if (!facture) {
     return (
-      <View style={styles.screen}>
+      <View
+        style={[styles.screen, { backgroundColor: themeColors.background }]}
+      >
         <TopBar />
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Facture introuvable.</Text>
+          <Text
+            style={[styles.errorText, { color: themeColors.textSecondary }]}
+          >
+            Facture introuvable.
+          </Text>
           <TouchableOpacity onPress={() => router.back()}>
-            <Text style={styles.backLink}>← Retour à l&apos;historique</Text>
+            <Text style={[styles.backLink, { color: Colors.light.primary }]}>
+              ← Retour à l&apos;historique
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -49,11 +59,13 @@ export default function FactureDetailScreen() {
   ];
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: themeColors.background }]}>
       <TopBar />
       <ScrollView>
         {/* En-tête de la facture */}
-        <View style={styles.header}>
+        <View
+          style={[styles.header, { backgroundColor: Colors.light.primary }]}
+        >
           <Text style={styles.headerRef}>Ref : {facture.ref}</Text>
           {facture.date && (
             <Text style={styles.headerDate}>{facture.date}</Text>
@@ -61,17 +73,31 @@ export default function FactureDetailScreen() {
         </View>
 
         {/* Montant total */}
-        <View style={styles.totalBanner}>
+        <View
+          style={[
+            styles.totalBanner,
+            { backgroundColor: Colors.light.primaryDark },
+          ]}
+        >
           <Text style={styles.totalLabel}>Montant total</Text>
           <Text style={styles.totalValue}>{facture.montant}</Text>
         </View>
 
         {/* Détail de la décomposition */}
-        <View style={styles.body}>
+        <View style={[styles.body, { backgroundColor: themeColors.card }]}>
           {lignes.map(({ label, value }) => (
-            <View key={label} style={styles.row}>
-              <Text style={styles.rowLabel}>{label}</Text>
-              <Text style={styles.rowValue}>{value}</Text>
+            <View
+              key={label}
+              style={[styles.row, { borderBottomColor: themeColors.border }]}
+            >
+              <Text
+                style={[styles.rowLabel, { color: themeColors.textSecondary }]}
+              >
+                {label}
+              </Text>
+              <Text style={[styles.rowValue, { color: themeColors.text }]}>
+                {value}
+              </Text>
             </View>
           ))}
         </View>
@@ -79,12 +105,16 @@ export default function FactureDetailScreen() {
         {/* Boutons actions */}
         <View style={styles.actions}>
           <TouchableOpacity
-            style={styles.backBtn}
+            style={[styles.backBtn, { borderColor: Colors.light.primary }]}
             onPress={() => router.back()}
           >
-            <Text style={styles.backBtnText}>Retour à l&apos;historique</Text>
+            <Text style={[styles.backBtnText, { color: Colors.light.primary }]}>
+              Retour à l&apos;historique
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.payBtn}>
+          <TouchableOpacity
+            style={[styles.payBtn, { backgroundColor: Colors.light.primary }]}
+          >
             <Text style={styles.payBtnText}>Payer maintenant</Text>
           </TouchableOpacity>
         </View>
@@ -94,9 +124,8 @@ export default function FactureDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#f4f4f4" },
+  screen: { flex: 1 },
   header: {
-    backgroundColor: Colors.primary,
     padding: 20,
     alignItems: "flex-start",
   },
@@ -111,7 +140,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   totalBanner: {
-    backgroundColor: Colors.primaryDark,
     padding: 20,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -129,7 +157,6 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: 18,
-    backgroundColor: "#fff",
     marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 12,
@@ -143,10 +170,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
   },
-  rowLabel: { fontSize: 13, color: "#666" },
-  rowValue: { fontSize: 15, fontWeight: "700", color: "#1a1a2e" },
+  rowLabel: { fontSize: 13 },
+  rowValue: { fontSize: 15, fontWeight: "700" },
   actions: {
     padding: 18,
     gap: 12,
@@ -155,16 +181,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: Colors.primary,
     borderRadius: 8,
   },
   backBtnText: {
-    color: Colors.primary,
     fontWeight: "600",
     fontSize: 14,
   },
   payBtn: {
-    backgroundColor: Colors.primary,
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
@@ -174,7 +197,6 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontSize: 15,
   },
-  // États vides / erreurs
   errorContainer: {
     flex: 1,
     alignItems: "center",
@@ -183,11 +205,9 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: "#999",
     marginBottom: 12,
   },
   backLink: {
-    color: Colors.primary,
     fontWeight: "600",
     fontSize: 15,
   },

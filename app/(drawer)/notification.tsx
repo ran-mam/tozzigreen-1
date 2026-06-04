@@ -1,5 +1,6 @@
 import TopBar from "@/components/layout/TopBar";
 import { Colors } from "@/constants/Colors";
+import { useTheme } from "@/context/ThemeContext";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 const NOTIFS = [
@@ -24,20 +25,47 @@ const NOTIFS = [
 ];
 
 export default function NotificationScreen() {
+  const { theme } = useTheme();
+  const themeColors = Colors[theme];
+
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: themeColors.background }]}>
       <TopBar />
-      <View style={styles.titleBar}>
+      <View
+        style={[styles.titleBar, { backgroundColor: Colors.light.primary }]}
+      >
         <Text style={styles.titleText}>Notifications</Text>
       </View>
       <ScrollView contentContainerStyle={styles.content}>
         {NOTIFS.map((n, i) => (
-          <View key={i} style={[styles.card, n.unread && styles.unread]}>
-            <View style={[styles.dot, n.unread && styles.dotActive]} />
+          <View
+            key={i}
+            style={[
+              styles.card,
+              { backgroundColor: themeColors.card },
+              n.unread && {
+                backgroundColor: theme === "light" ? "#f0f9e5" : "#1a2a0f",
+                borderLeftColor: Colors.light.primary,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.dot,
+                { backgroundColor: themeColors.textSecondary },
+                n.unread && { backgroundColor: Colors.light.primary },
+              ]}
+            />
             <View style={styles.body}>
-              <Text style={styles.title}>{n.title}</Text>
-              <Text style={styles.desc}>{n.desc}</Text>
-              <Text style={styles.time}>{n.time}</Text>
+              <Text style={[styles.title, { color: themeColors.text }]}>
+                {n.title}
+              </Text>
+              <Text style={[styles.desc, { color: themeColors.textSecondary }]}>
+                {n.desc}
+              </Text>
+              <Text style={[styles.time, { color: themeColors.textSecondary }]}>
+                {n.time}
+              </Text>
             </View>
           </View>
         ))}
@@ -47,12 +75,11 @@ export default function NotificationScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#f4f4f4" },
-  titleBar: { backgroundColor: Colors.primary, padding: 14 },
+  screen: { flex: 1 },
+  titleBar: { padding: 14 },
   titleText: { color: "#fff", fontWeight: "800", fontSize: 15 },
   content: { padding: 16, paddingBottom: 32 },
   card: {
-    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 14,
     marginBottom: 10,
@@ -61,17 +88,14 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: "transparent",
   },
-  unread: { backgroundColor: "#f0f9e5", borderLeftColor: Colors.primary },
   dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#ddd",
     marginTop: 6,
   },
-  dotActive: { backgroundColor: Colors.primary },
   body: { flex: 1 },
-  title: { fontSize: 13, fontWeight: "700", color: "#1a1a2e", marginBottom: 3 },
-  desc: { fontSize: 12, color: "#666", lineHeight: 18, marginBottom: 6 },
-  time: { fontSize: 11, color: "#aaa" },
+  title: { fontSize: 13, fontWeight: "700", marginBottom: 3 },
+  desc: { fontSize: 12, lineHeight: 18, marginBottom: 6 },
+  time: { fontSize: 11 },
 });

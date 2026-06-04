@@ -4,6 +4,7 @@ import AirtelLogo from "@/components/payment/AirtelLogo";
 import MVolaLogo from "@/components/payment/MVolaLogo";
 import OrangeLogo from "@/components/payment/OrangeLogo";
 import { Colors } from "@/constants/Colors";
+import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
@@ -18,16 +19,21 @@ const ROWS = [
 
 export default function FacturationScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const themeColors = Colors[theme];
+
   const [success, setSuccess] = useState(false);
   const [prixKwh, setPrixKwh] = useState("2000");
   const [rowValues, setRowValues] = useState(ROWS.map((r) => r.value));
   const [total, setTotal] = useState("24300");
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: themeColors.background }]}>
       <TopBar />
       <ScrollView>
-        <View style={styles.header}>
+        <View
+          style={[styles.header, { backgroundColor: Colors.light.primary }]}
+        >
           <Text style={styles.headerLabel}>Prix du kwh</Text>
           <View style={styles.headerInputWrapper}>
             <TextInput
@@ -43,41 +49,60 @@ export default function FacturationScreen() {
 
         <View style={styles.body}>
           {ROWS.map(({ label }, index) => (
-            <View key={label} style={styles.row}>
-              <Text style={styles.rowLabel}>{label}</Text>
+            <View
+              key={label}
+              style={[styles.row, { borderBottomColor: themeColors.border }]}
+            >
+              <Text
+                style={[styles.rowLabel, { color: themeColors.textSecondary }]}
+              >
+                {label}
+              </Text>
               <View style={styles.rowInputWrapper}>
                 <TextInput
-                  style={styles.rowValue}
+                  style={[styles.rowValue, { color: themeColors.text }]}
                   value={rowValues[index]}
                   onChangeText={(text) =>
                     setRowValues((prev) =>
                       prev.map((v, i) =>
-                        i === index ? text.replace(/[^0-9]/g, "") : v
-                      )
+                        i === index ? text.replace(/[^0-9]/g, "") : v,
+                      ),
                     )
                   }
                   keyboardType="numeric"
+                  placeholderTextColor={themeColors.textSecondary}
                 />
-                <Text style={styles.rowUnit}>Ar</Text>
+                <Text style={[styles.rowUnit, { color: themeColors.text }]}>
+                  Ar
+                </Text>
               </View>
             </View>
           ))}
           <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Total à payer</Text>
+            <Text
+              style={[styles.totalLabel, { color: themeColors.textSecondary }]}
+            >
+              Total à payer
+            </Text>
             <View style={styles.rowInputWrapper}>
               <TextInput
-                style={styles.totalValue}
+                style={[styles.totalValue, { color: themeColors.text }]}
                 value={total}
                 onChangeText={(text) => setTotal(text.replace(/[^0-9]/g, ""))}
                 keyboardType="numeric"
+                placeholderTextColor={themeColors.textSecondary}
               />
-              <Text style={styles.totalUnit}>Ar</Text>
+              <Text style={[styles.totalUnit, { color: themeColors.text }]}>
+                Ar
+              </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.payment}>
-          <Text style={styles.paymentLabel}>
+          <Text
+            style={[styles.paymentLabel, { color: themeColors.textSecondary }]}
+          >
             Veuillez choisir le moyen de paiement
           </Text>
           <View style={styles.logos}>
@@ -101,8 +126,8 @@ export default function FacturationScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#f4f4f4" },
-  header: { backgroundColor: Colors.primary, padding: 16 },
+  screen: { flex: 1 },
+  header: { padding: 16 },
   headerLabel: {
     color: "rgba(255,255,255,0.8)",
     fontSize: 11,
@@ -111,7 +136,7 @@ const styles = StyleSheet.create({
   },
   headerInputWrapper: {
     flexDirection: "row",
-    alignItems: 'center',
+    alignItems: "center",
     gap: 4,
   },
   headerValue: {
@@ -133,36 +158,37 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
   },
-  rowLabel: { fontSize: 13, color: "#666" },
+  rowLabel: { fontSize: 13 },
   rowInputWrapper: { flexDirection: "row", alignItems: "baseline", gap: 4 },
   rowValue: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#1a1a2e",
     padding: 0,
     minWidth: 60,
     textAlign: "right",
   },
-  rowUnit: { fontSize: 13, fontWeight: "600", color: "#1a1a2e" },
+  rowUnit: { fontSize: 13, fontWeight: "600" },
   totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
     paddingTop: 16,
   },
-  totalLabel: { fontSize: 13, color: "#666", fontWeight: "600" },
+  totalLabel: { fontSize: 13, fontWeight: "600" },
   totalValue: {
     fontSize: 20,
     fontWeight: "900",
-    color: "#1a1a2e",
     padding: 0,
     minWidth: 80,
     textAlign: "right",
   },
-  totalUnit: { fontSize: 15, fontWeight: "700", color: "#1a1a2e" },
+  totalUnit: { fontSize: 15, fontWeight: "700" },
   payment: { padding: 18 },
-  paymentLabel: { fontSize: 13, color: "#555", marginBottom: 25, textAlign: "center" },
+  paymentLabel: {
+    fontSize: 13,
+    marginBottom: 25,
+    textAlign: "center",
+  },
   logos: { flexDirection: "row", gap: 10 },
 });

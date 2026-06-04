@@ -3,11 +3,10 @@ import PaymentModal from "@/components/modals/PaymentModal";
 import SuccessModal from "@/components/modals/SuccessModal";
 import StatBadge from "@/components/ui/StatBadge";
 import { Colors } from "@/constants/Colors";
+import { useTheme } from "@/context/ThemeContext";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-// import { SafeAreaView } from 'react-native-safe-area-context';
-
 import {
   ScrollView,
   StyleSheet,
@@ -25,24 +24,29 @@ const GRID = [
 
 export default function AccueilScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const themeColors = Colors[theme];
+
   const [payModal, setPayModal] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: themeColors.background }]}>
       <TopBar />
       <ScrollView>
         {/* Banner */}
-        <View style={styles.banner}>
+        <View
+          style={[styles.banner, { backgroundColor: Colors.light.primary }]}
+        >
           <Text style={styles.bannerTitle}>
-            Bonjour Mika ! bienvenue sur votre applicaion de facturation.
+            Bonjour Mika ! bienvenue sur votre application de facturation.
           </Text>
           <Text style={styles.bannerSub}>
             Vous devez d&apos;abord passez au remboursement
           </Text>
           <TouchableOpacity
             onPress={() => router.push("/facturation")}
-            style={styles.rembBtn}
+            style={[styles.rembBtn, { backgroundColor: Colors.light.orange }]}
           >
             <Text style={styles.rembText}>Rembourser</Text>
           </TouchableOpacity>
@@ -60,14 +64,22 @@ export default function AccueilScreen() {
           {GRID.map(({ label, icon, route }) => (
             <TouchableOpacity
               key={label}
-              style={styles.gridItem}
+              style={[
+                styles.gridItem,
+                {
+                  backgroundColor: themeColors.card,
+                  borderColor: themeColors.border,
+                },
+              ]}
               activeOpacity={0.8}
               onPress={() =>
                 route ? router.push(`/${route}`) : setPayModal(true)
               }
             >
-              <Feather name={icon as any} size={40} color="#1a1a2e" />
-              <Text style={styles.gridLabel}>{label}</Text>
+              <Feather name={icon as any} size={40} color={themeColors.text} />
+              <Text style={[styles.gridLabel, { color: themeColors.text }]}>
+                {label}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -95,9 +107,8 @@ export default function AccueilScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#f4f4f4" },
+  screen: { flex: 1 },
   banner: {
-    backgroundColor: Colors.primary,
     padding: 20,
     alignItems: "center",
     marginBottom: 10,
@@ -116,7 +127,6 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   rembBtn: {
-    backgroundColor: Colors.orange,
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 28,
@@ -124,37 +134,34 @@ const styles = StyleSheet.create({
   rembText: {
     color: "#fff",
     fontWeight: "700",
-    fontSize: 15
+    fontSize: 15,
   },
   stats: {
     backgroundColor: "#CAD612",
     flexDirection: "row",
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 14,
     paddingHorizontal: 18,
   },
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     padding: 10,
     gap: 10,
   },
   gridItem: {
     width: "47%",
-    backgroundColor: "#fff",
     alignItems: "center",
     padding: 34,
     gap: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e8e8e8",
     marginBottom: 10,
   },
   gridLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#1a1a2e"
   },
 });
