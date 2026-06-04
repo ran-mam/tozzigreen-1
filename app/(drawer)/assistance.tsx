@@ -17,6 +17,9 @@ export default function AssistanceScreen() {
     const [message, setMessage] = useState("");
     const router = useRouter();
 
+    // ouverture et fermeture du question FAQ
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
     const handleSend = () => {
         if (message.trim()) {
             Alert.alert(
@@ -63,10 +66,22 @@ export default function AssistanceScreen() {
             {/* FAQ */}
             <Text style={styles.sectionTitle}>Questions fréquentes</Text>
             {FAQ.map((item, index) => (
-                <TouchableOpacity key={index} style={styles.faqItem}>
-                    <Text style={styles.faqQuestion}>{item.question}</Text>
-                    <Feather name="chevron-down" size={20} color="#999" />
-                </TouchableOpacity>
+                <View key={index}>
+                    <TouchableOpacity
+                        style={styles.faqItem}
+                        onPress={() => setExpandedIndex(expandedIndex === index ? null : index)}
+                    >
+                        <Text style={styles.faqQuestion}>{item.question}</Text>
+                        <Feather
+                            name={expandedIndex === index ? "chevron-up" : "chevron-down"}
+                            size={20}
+                            color="#999"
+                        />
+                    </TouchableOpacity>
+                    {expandedIndex === index && (
+                        <Text style={styles.faqAnswer}>{item.answer}</Text>
+                    )}
+                </View>
             ))}
 
             {/* SÉPARATEUR */}
@@ -95,10 +110,10 @@ export default function AssistanceScreen() {
 }
 
 const FAQ = [
-    { question: "Comment recharger mon compteur ?" },
-    { question: "Où trouver mon numéro de facture ?" },
-    { question: "Comment contacter le service client ?" },
-    { question: "Que faire en cas de coupure ?" },
+    { question: "Comment recharger mon compteur ?", answer: "Allez dans la section Consommation, cliquez sur Recharger et choisissez votre mode de paiement (Airtel, Orange, MVola)." },
+    { question: "Où trouver mon numéro de facture ?", answer: "Votre numéro de facture se trouve dans la section Facturation, en haut de votre dernière facture." },
+    { question: "Comment contacter le service client ?", answer: "Vous pouvez nous appeler au +261 34 00 000 00 ou nous écrire via WhatsApp au même numéro." },
+    { question: "Que faire en cas de coupure ?", answer: "Vérifiez d'abord votre solde dans l'application. Si le problème persiste, contactez notre service client au +261 34 00 000 00." },
 ];
 
 const styles = StyleSheet.create({
@@ -157,7 +172,18 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "#f0f0f0",
     },
-    faqQuestion: { fontSize: 14, color: "#333", flex: 1 },
+    faqQuestion: {
+        fontSize: 14,
+        color: "#333",
+        flex: 1
+    },
+    faqAnswer: {
+        fontSize: 14,
+        color: '#666',
+        paddingVertical: 12,
+        paddingHorizontal: 4,
+        lineHeight: 20,
+    },
     textArea: {
         backgroundColor: "#f5f5f5",
         borderRadius: 8,

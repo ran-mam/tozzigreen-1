@@ -6,16 +6,30 @@ import {
     ScrollView,
     Switch,
     Alert,
+    BackHandler
 } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Colors } from '@/constants/Colors';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+
+import { USER } from '@/constants/user';
 
 export default function SettingsScreen() {
     const router = useRouter();
     const [notifications, setNotifications] = useState(true);
     const [darkMode, setDarkMode] = useState(false);
+
+    useEffect(() => {
+        const backAction = () => {
+            router.replace('/(drawer)');
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+        return () => backHandler.remove();
+    }, []);
 
     const handleLogout = () => {
         Alert.alert(
@@ -32,21 +46,6 @@ export default function SettingsScreen() {
         );
     };
 
-    const handleDeleteAccount = () => {
-        Alert.alert(
-            'Supprimer le compte',
-            'Cette action est irréversible. Toutes vos données seront perdues.',
-            [
-                { text: 'Annuler', style: 'cancel' },
-                {
-                    text: 'Supprimer',
-                    style: 'destructive',
-                    onPress: () => Alert.alert('Compte supprimé', 'Votre compte a été supprimé.'),
-                },
-            ]
-        );
-    };
-
     return (
         <ScrollView style={styles.container}>
             <View style={styles.header}>
@@ -55,6 +54,15 @@ export default function SettingsScreen() {
                 </TouchableOpacity>
                 <Text style={styles.title}>Paramètres</Text>
                 <View style={{ width: 24 }} />
+            </View>
+
+            {/* Identité utilisateur */}
+            <View style={styles.identityCard}>
+                <Feather name="user" size={22} color={Colors.primary} />
+                <View style={styles.identityInfo}>
+                    <Text style={styles.identityName}>{USER.name}</Text>
+                    <Text style={styles.identityId}>Identifiant: {USER.id}</Text>
+                </View>
             </View>
 
             {/* Section Compte */}
@@ -99,7 +107,7 @@ export default function SettingsScreen() {
                     <Switch
                         value={notifications}
                         onValueChange={setNotifications}
-                        trackColor={{ false: '#ddd', true: Colors.primary }}
+                        trackColor={{ false: '#ddd', true:' #939597' }}
                     />
                 </View>
                 <View style={styles.divider} />
@@ -109,7 +117,7 @@ export default function SettingsScreen() {
                     <Switch
                         value={darkMode}
                         onValueChange={setDarkMode}
-                        trackColor={{ false: '#ddd', true: Colors.primary }}
+                        trackColor={{ false: '#ddd', true:' #939597' }}
                     />
                 </View>
             </View>
@@ -160,12 +168,6 @@ export default function SettingsScreen() {
                 <Text style={styles.logoutText}>Se déconnecter</Text>
             </TouchableOpacity>
 
-            {/* Supprimer le compte */}
-            <TouchableOpacity style={styles.deleteBtn} onPress={handleDeleteAccount}>
-                <Feather name="trash-2" size={20} color="#e53e3e" />
-                <Text style={styles.deleteText}>Supprimer mon compte</Text>
-            </TouchableOpacity>
-
             <View style={{ height: 40 }} />
         </ScrollView>
     );
@@ -202,6 +204,28 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         paddingHorizontal: 16,
         marginBottom: 20,
+    },
+    identityCard: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 14,
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 20,
+    },
+    identityInfo: {
+        flex: 1,
+    },
+    identityName: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
+    },
+    identityId: {
+        fontSize: 13,
+        color: '#999',
+        marginTop: 2,
     },
     row: {
         flexDirection: 'row',

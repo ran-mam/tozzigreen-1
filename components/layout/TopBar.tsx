@@ -37,13 +37,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 18,
-    paddingVertical: 14,
+    paddingVertical: 12,
     backgroundColor: "#fff",
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
+    height: 60,
   },
   logoImage: {
-    height: 40,
+    height: 36,
     width: 140,
   },
 });

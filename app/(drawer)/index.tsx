@@ -38,7 +38,7 @@ export default function AccueilScreen() {
             Bonjour Mika ! bienvenue sur votre application de facturation.
           </Text>
           <Text style={styles.bannerSub}>
-            Vous devez d&aposabord passez au remboursement
+            Vous devez d&apos;abord passez au remboursement
           </Text>
           <TouchableOpacity
             onPress={() => router.push("/facturation")}
