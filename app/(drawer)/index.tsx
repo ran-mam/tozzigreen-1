@@ -35,7 +35,7 @@ export default function AccueilScreen() {
         {/* Banner */}
         <View style={styles.banner}>
           <Text style={styles.bannerTitle}>
-            Bonjour Mika ! bienvenue sur votre application de facturation.
+            Bonjour Mika ! bienvenue sur votre applicaion de facturation.
           </Text>
           <Text style={styles.bannerSub}>
             Vous devez d&apos;abord passez au remboursement
@@ -104,13 +104,13 @@ const styles = StyleSheet.create({
   bannerTitle: {
     color: "#fff",
     fontWeight: "700",
-    fontSize: 16,
+    fontSize: 18,
     textAlign: "center",
     marginBottom: 4,
   },
   bannerSub: {
     color: "rgba(255,255,255,0.85)",
-    fontSize: 12,
+    fontSize: 14,
     textAlign: "center",
     marginBottom: 14,
   },
@@ -120,7 +120,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 28,
   },
-  rembText: { color: "#fff", fontWeight: "700", fontSize: 14 },
+  rembText: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 15
+  },
   stats: {
     backgroundColor: Colors.primaryDark,
     flexDirection: "row",
@@ -145,5 +149,9 @@ const styles = StyleSheet.create({
     borderColor: "#e8e8e8",
     marginBottom: 10,
   },
-  gridLabel: { fontSize: 14, fontWeight: "600", color: "#1a1a2e" },
+  gridLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#1a1a2e"
+  },
 });

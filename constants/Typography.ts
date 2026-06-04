@@ -1,5 +1,10 @@
 export const Typography = {
-  fontFamily: "Nunito_900Black",
+  fontFamily: {
+    regular: "Roboto-Regular",
+    medium: "Roboto-Medium",
+    bold: "Roboto-Bold",
+    black: "Roboto-Black",
+  },
   sizes: {
     xs: 10,
     sm: 12,
@@ -7,13 +12,5 @@ export const Typography = {
     lg: 16,
     xl: 20,
     xxl: 28,
-  },
-  weights: {
-    regular: "400",
-    medium: "500",
-    semibold: "600",
-    bold: "700",
-    extrabold: "800",
-    black: "900",
   },
 };
