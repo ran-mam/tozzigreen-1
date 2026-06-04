@@ -41,10 +41,10 @@ export default function AssistanceScreen() {
                 <TouchableOpacity onPress={() => router.replace("/(drawer)")}>
                     <Feather name="arrow-left" size={24} color="#000" />
                 </TouchableOpacity>
-                <Text style={styles.title}>Paramètres</Text>
+                <Text style={styles.title}>Assistance</Text>
                 <View style={{ width: 24 }} />
             </View>
-            <Text style={styles.title}>Assistance</Text>
+
             <Text style={styles.subtitle}>Comment pouvons-nous vous aider ?</Text>
 
             {/* Contact rapide */}
@@ -112,7 +112,12 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: 4,
     },
-    subtitle: { fontSize: 14, color: "#666", marginBottom: 24 },
+    subtitle: {
+        fontSize: 14,
+        color: '#666',
+        marginBottom: 24,
+        textAlign: 'center',
+    },
     contactRow: {
         flexDirection: "row",
         justifyContent: "center",

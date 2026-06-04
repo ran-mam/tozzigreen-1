@@ -19,7 +19,7 @@ export default function EditProfileScreen() {
         const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
         return () => backHandler.remove();
-    }, []);
+    }, [router]);
 
     const [name, setName] = useState('Mika');
     const [email, setEmail] = useState('mika@example.com');

@@ -14,6 +14,8 @@ import { useRouter } from 'expo-router';
 
 export default function ChangePhoneScreen() {
     const router = useRouter();
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [currentPhone, setCurrentPhone] = useState('+261 34 00 000 00');
     const [newPhone, setNewPhone] = useState('');
 
