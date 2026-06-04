@@ -16,7 +16,6 @@ export default function SettingsScreen() {
     const router = useRouter();
     const [notifications, setNotifications] = useState(true);
     const [darkMode, setDarkMode] = useState(false);
-    const [biometric, setBiometric] = useState(false);
 
     const handleLogout = () => {
         Alert.alert(
@@ -113,22 +112,15 @@ export default function SettingsScreen() {
                         trackColor={{ false: '#ddd', true: Colors.primary }}
                     />
                 </View>
-                <View style={styles.divider} />
-                <View style={styles.row}>
-                    <Feather name="smartphone" size={20} color={Colors.primary} />
-                    <Text style={styles.rowText}>Verrouillage biométrique</Text>
-                    <Switch
-                        value={biometric}
-                        onValueChange={setBiometric}
-                        trackColor={{ false: '#ddd', true: Colors.primary }}
-                    />
-                </View>
             </View>
 
             {/* Section Infos */}
             <Text style={styles.sectionTitle}>Informations</Text>
             <View style={styles.card}>
-                <TouchableOpacity style={styles.row}>
+                <TouchableOpacity
+                    style={styles.row}
+                    onPress={() => router.push('/about' as any)}
+                >
                     <Feather name="info" size={20} color={Colors.primary} />
                     <Text style={styles.rowText}>À propos</Text>
                     <Feather name="chevron-right" size={20} color="#ccc" />
