@@ -17,6 +17,7 @@ export default function MVolaLogo({ size = "md", onPress }: Props) {
     >
       <Image
         source={require("@/assets/images/mvola.jpeg")}
+
         style={{ width: imgSize, height: imgSize }}
         resizeMode="contain"
       />
@@ -31,4 +32,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
 });
