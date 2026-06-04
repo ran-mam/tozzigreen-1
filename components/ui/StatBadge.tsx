@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     borderRightColor: "rgba(255,255,255,0.25)",
   },
   label: {
-    color: "rgba(255,255,255,0.75)",
+    color: '#000',
     fontSize: 9,
     fontWeight: "600",
     textTransform: "uppercase",

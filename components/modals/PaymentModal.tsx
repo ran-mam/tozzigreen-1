@@ -96,11 +96,12 @@ const styles = StyleSheet.create({
   },
   logos: {
     flexDirection: "row",
-    gap: 10,
+    gap: 25,
     width: "100%",
+    marginVertical: 20,
   },
   cancelBtn: {
-    marginTop: 16,
+    marginTop: 30,
     width: "100%",
     borderWidth: 1,
     borderColor: "#ddd",

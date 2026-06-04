@@ -109,18 +109,22 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     textTransform: "uppercase",
   },
-  headerInputWrapper: { flexDirection: "row", alignItems: "baseline", gap: 4 },
+  headerInputWrapper: {
+    flexDirection: "row",
+    alignItems: 'center',
+    gap: 4,
+  },
   headerValue: {
     color: "#fff",
     fontWeight: "900",
     fontSize: 24,
     padding: 0,
-    minWidth: 80,
   },
   headerUnit: {
     color: "rgba(255,255,255,0.85)",
     fontSize: 16,
     fontWeight: "700",
+    marginLeft: 2,
   },
   body: { padding: 18 },
   row: {
@@ -159,6 +163,6 @@ const styles = StyleSheet.create({
   },
   totalUnit: { fontSize: 15, fontWeight: "700", color: "#1a1a2e" },
   payment: { padding: 18 },
-  paymentLabel: { fontSize: 13, color: "#555", marginBottom: 14 },
+  paymentLabel: { fontSize: 13, color: "#555", marginBottom: 25, textAlign: "center" },
   logos: { flexDirection: "row", gap: 10 },
 });

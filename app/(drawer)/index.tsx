@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     padding: 20,
     alignItems: "center",
+    marginBottom: 10,
   },
   bannerTitle: {
     color: "#fff",
@@ -126,8 +127,10 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   stats: {
-    backgroundColor: Colors.primaryDark,
+    backgroundColor: "#CAD612",
     flexDirection: "row",
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingVertical: 14,
     paddingHorizontal: 18,
   },
