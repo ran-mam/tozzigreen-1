@@ -26,7 +26,7 @@ export default function FacturationScreen() {
       <ScrollView>
         <View style={styles.header}>
           <Text style={styles.headerLabel}>Prix du kwh</Text>
-          <Text style={styles.headerValue}>2 000 Ar</Text>
+          <Text style={styles.headerValue}>2 00 Ar</Text>
         </View>
 
         <View style={styles.body}>
