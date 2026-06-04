@@ -55,19 +55,30 @@ export default function SettingsScreen() {
             {/* Section Compte */}
             <Text style={styles.sectionTitle}>Compte</Text>
             <View style={styles.card}>
-                <TouchableOpacity style={styles.row}>
+                <TouchableOpacity
+                    style={styles.row}
+                    onPress={() => router.push('/edit-profile' as any)}
+                >
                     <Feather name="user" size={20} color={Colors.primary} />
                     <Text style={styles.rowText}>Modifier le profil</Text>
                     <Feather name="chevron-right" size={20} color="#ccc" />
                 </TouchableOpacity>
+
                 <View style={styles.divider} />
-                <TouchableOpacity style={styles.row}>
+                <TouchableOpacity
+                    style={styles.row}
+                    onPress={() => router.push('/change-password' as any)}
+                >
                     <Feather name="lock" size={20} color={Colors.primary} />
                     <Text style={styles.rowText}>Changer le mot de passe</Text>
                     <Feather name="chevron-right" size={20} color="#ccc" />
                 </TouchableOpacity>
+
                 <View style={styles.divider} />
-                <TouchableOpacity style={styles.row}>
+                <TouchableOpacity
+                    style={styles.row}
+                    onPress={() => router.push('/change-phone' as any)}
+                >
                     <Feather name="phone" size={20} color={Colors.primary} />
                     <Text style={styles.rowText}>Changer le numéro</Text>
                     <Feather name="chevron-right" size={20} color="#ccc" />
@@ -116,18 +127,27 @@ export default function SettingsScreen() {
                     <Text style={styles.rowText}>À propos</Text>
                     <Feather name="chevron-right" size={20} color="#ccc" />
                 </TouchableOpacity>
+
                 <View style={styles.divider} />
-                <TouchableOpacity style={styles.row}>
+                <TouchableOpacity
+                    style={styles.row}
+                    onPress={() => router.push('/privacy' as any)}
+                >
                     <Feather name="shield" size={20} color={Colors.primary} />
                     <Text style={styles.rowText}>Politique de confidentialité</Text>
                     <Feather name="chevron-right" size={20} color="#ccc" />
                 </TouchableOpacity>
+
                 <View style={styles.divider} />
-                <TouchableOpacity style={styles.row}>
+                <TouchableOpacity
+                    style={styles.row}
+                    onPress={() => router.push('/terms' as any)}
+                >
                     <Feather name="file-text" size={20} color={Colors.primary} />
                     <Text style={styles.rowText}>Conditions d&apos;utilisation</Text>
                     <Feather name="chevron-right" size={20} color="#ccc" />
                 </TouchableOpacity>
+
                 <View style={styles.divider} />
                 <View style={styles.row}>
                     <Feather name="tag" size={20} color={Colors.primary} />
@@ -222,8 +242,9 @@ const styles = StyleSheet.create({
         padding: 16,
         borderRadius: 12,
     },
-    deleteText: { 
-        fontSize: 15, 
-        color: '#e53e3e', 
-        fontWeight: '600' },
+    deleteText: {
+        fontSize: 15,
+        color: '#e53e3e',
+        fontWeight: '600'
+    },
 });

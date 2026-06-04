@@ -56,6 +56,9 @@ export default function AssistanceScreen() {
                     <Feather name="chevron-down" size={20} color="#999" />
                 </TouchableOpacity>
             ))}
+            
+            {/* SÉPARATEUR */}
+            <View style={{ height: 1, backgroundColor: '#f0f0f0', marginVertical: 20 }} />
 
             {/* Message */}
             <Text style={styles.sectionTitle}>Envoyer un message</Text>
