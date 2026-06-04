@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     StyleSheet, Text, View, TextInput, TouchableOpacity,
-    ScrollView, Alert,
+    ScrollView, Alert, BackHandler
 } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { Feather } from '@expo/vector-icons';
@@ -9,6 +9,18 @@ import { useRouter } from 'expo-router';
 
 export default function EditProfileScreen() {
     const router = useRouter();
+
+    useEffect(() => {
+        const backAction = () => {
+            router.replace('/(drawer)/settings');
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+        return () => backHandler.remove();
+    }, []);
+
     const [name, setName] = useState('Mika');
     const [email, setEmail] = useState('mika@example.com');
     const [phone, setPhone] = useState('+261 34 00 000 00');
@@ -16,16 +28,17 @@ export default function EditProfileScreen() {
 
     const handleSave = () => {
         Alert.alert('Profil mis à jour', 'Vos informations ont été enregistrées.', [
-            { text: 'OK', onPress: () => router.back() },
+            { text: 'OK', onPress: () => router.replace('/(drawer)/settings') },
         ]);
     };
 
     return (
         <ScrollView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => router.back()}>
+                <TouchableOpacity onPress={() => router.replace('/(drawer)/settings')}>
                     <Feather name="arrow-left" size={24} color="#000" />
                 </TouchableOpacity>
+
                 <Text style={styles.headerTitle}>Modifier le profil</Text>
                 <View style={{ width: 24 }} />
             </View>

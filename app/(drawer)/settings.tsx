@@ -50,7 +50,13 @@ export default function SettingsScreen() {
 
     return (
         <ScrollView style={styles.container}>
-            <Text style={styles.title}>Paramètres</Text>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => router.replace('/(drawer)')}>
+                    <Feather name="arrow-left" size={24} color="#000" />
+                </TouchableOpacity>
+                <Text style={styles.title}>Paramètres</Text>
+                <View style={{ width: 24 }} />
+            </View>
 
             {/* Section Compte */}
             <Text style={styles.sectionTitle}>Compte</Text>
@@ -182,7 +188,12 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         fontWeight: 'bold',
-        marginBottom: 20
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 20,
     },
     sectionTitle: {
         fontSize: 13,
