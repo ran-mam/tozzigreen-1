@@ -16,8 +16,8 @@ import {
 } from "react-native";
 
 const GRID = [
-  { label: "Recharger", icon: "credit-card", route: null },
-  { label: "Facturation", icon: "file-text", route: "facturation" },
+  { label: "Recharger", icon: "credit-card", route: "facturation" },
+  { label: "Facturation", icon: "file-text", route: "historique" },
   { label: "Consommation", icon: "activity", route: "consommation" },
   { label: "Assistance", icon: "help-circle", route: "assistance" },
 ] as const;
@@ -45,7 +45,7 @@ export default function AccueilScreen() {
             Vous devez d&apos;abord passez au remboursement
           </Text>
           <TouchableOpacity
-            onPress={() => router.push("/facturation")}
+            onPress={() => setPayModal(true)}
             style={[styles.rembBtn, { backgroundColor: Colors.light.orange }]}
           >
             <Text style={styles.rembText}>Rembourser</Text>

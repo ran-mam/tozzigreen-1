@@ -1,6 +1,6 @@
-import { Colors } from "@/constants/Colors";
+import { BrandColors, Colors } from "@/constants/Colors";
+import { useTheme } from "@/context/ThemeContext";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
 interface Props {
   visible: boolean;
   onClose: () => void;
@@ -8,19 +8,32 @@ interface Props {
 }
 
 export default function SuccessModal({ visible, onClose, onViewBill }: Props) {
+  const { theme } = useTheme();
+  const themeColors = Colors[theme];
+  const isLight = theme === "light";
+
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.backdrop}>
-        <View style={styles.card}>
-          <View style={styles.iconCircle}>
+        <View style={[styles.card, { backgroundColor: themeColors.card }]}>
+          <View
+            style={[
+              styles.iconCircle,
+              {
+                backgroundColor: isLight ? "#e8f7d9" : "#1a3d1a",
+              },
+            ]}
+          >
             <Text style={styles.check}>✓</Text>
           </View>
-          <Text style={styles.title}>Paiement réussi</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: themeColors.text }]}>
+            Paiement réussi
+          </Text>
+          <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>
             Vous pouvez consulter votre facture
           </Text>
-          <TouchableOpacity onPress={onViewBill} style={styles.btn}>
-            <Text style={styles.btnText}>Cliquez ici</Text>
+          <TouchableOpacity onPress={onClose} style={styles.btn}>
+            <Text style={styles.btnText}>Fermer</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -36,7 +49,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   card: {
-    backgroundColor: "#fff",
     borderRadius: 18,
     padding: 36,
     width: 290,
@@ -46,30 +58,27 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: "#e8f7d9",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,
   },
   check: {
     fontSize: 36,
-    color: Colors.primary,
+    color: BrandColors.primary,
     fontWeight: "900",
   },
   title: {
     fontSize: 18,
     fontWeight: "800",
-    color: "#1a1a2e",
     marginBottom: 6,
   },
   subtitle: {
     fontSize: 13,
-    color: "#777",
     marginBottom: 22,
     textAlign: "center",
   },
   btn: {
-    backgroundColor: Colors.primary,
+    backgroundColor: BrandColors.primary,
     borderRadius: 25,
     paddingVertical: 13,
     width: "100%",

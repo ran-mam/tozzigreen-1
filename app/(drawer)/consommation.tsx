@@ -9,7 +9,6 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  Modal,
   Platform,
 } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -17,7 +16,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const STATS = [
   { label: "Consommation totale", value: "0 kWh", color: Colors.light.primary },
   { label: "Moyenne journalière", value: "0 kWh", color: Colors.light.primaryDark },
-  { label: "Coût estimé", value: "0 Ar", color: Colors.light.dark },
+  { label: "Coût estimé", value: "0 Ar", color: Colors.light.primary },
 ];
 
 export default function ConsommationScreen() {
@@ -31,13 +30,12 @@ export default function ConsommationScreen() {
   const [stats, setStats] = useState(STATS);
 
   const handleSearch = () => {
-    // à remplacer par un appel API)
     console.log('Recherche du', dateFrom.toLocaleDateString(), 'au', dateTo.toLocaleDateString());
 
     setStats([
       { label: "Consommation totale", value: "45 kWh", color: Colors.light.primary },
-      { label: "Moyenne journalière", value: "3.2 kWh", color: Colors.light.primaryDark },
-      { label: "Coût estimé", value: "90 000 Ar", color: Colors.light.dark },
+      { label: "Moyenne journalière", value: "3.2 kWh", color: Colors.light.primary },
+      { label: "Coût estimé", value: "90 000 Ar", color: Colors.light.primary },
     ]);
   };
 

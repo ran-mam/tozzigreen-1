@@ -6,16 +6,12 @@ import OrangeLogo from "@/components/payment/OrangeLogo";
 import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
-const ROWS = [
-  { label: "Quantité", value: "10" },
-  { label: "Montant HT", value: "20000" },
-  { label: "TVA", value: "4000" },
-  { label: "FNE", value: "100" },
-  { label: "Taxe communale", value: "200" },
-];
+const formatNumber = (num: string) => {
+  return num.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+};
 
 export default function FacturationScreen() {
   const router = useRouter();
@@ -24,17 +20,33 @@ export default function FacturationScreen() {
 
   const [success, setSuccess] = useState(false);
   const [prixKwh, setPrixKwh] = useState("2000");
-  const [rowValues, setRowValues] = useState(ROWS.map((r) => r.value));
-  const [total, setTotal] = useState("24300");
+  const [quantite, setQuantite] = useState("10");
+
+  const prixKwhNum = parseFloat(prixKwh) || 0;
+  const quantiteNum = parseFloat(quantite) || 0;
+
+  const facture = useMemo(() => {
+    const montantHT = prixKwhNum * quantiteNum;
+    const tva = montantHT * 0.2;
+    const fne = 100;
+    const taxeCommunale = 200;
+    const total = montantHT + tva + fne + taxeCommunale;
+
+    return {
+      montantHT: montantHT.toFixed(0),
+      tva: tva.toFixed(0),
+      fne: fne.toFixed(0),
+      taxeCommunale: taxeCommunale.toFixed(0),
+      total: total.toFixed(0),
+    };
+  }, [prixKwhNum, quantiteNum]);
 
   return (
     <View style={[styles.screen, { backgroundColor: themeColors.background }]}>
       <TopBar />
       <ScrollView>
-        <View
-          style={[styles.header, { backgroundColor: Colors.light.primary }]}
-        >
-          <Text style={styles.headerLabel}>Prix du kwh</Text>
+        <View style={[styles.header, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.headerLabel}>Prix du kWh</Text>
           <View style={styles.headerInputWrapper}>
             <TextInput
               style={styles.headerValue}
@@ -47,63 +59,77 @@ export default function FacturationScreen() {
           </View>
         </View>
 
+        {/* Formulaire */}
         <View style={styles.body}>
-          {ROWS.map(({ label }, index) => (
-            <View
-              key={label}
-              style={[styles.row, { borderBottomColor: themeColors.border }]}
-            >
-              <Text
-                style={[styles.rowLabel, { color: themeColors.textSecondary }]}
-              >
-                {label}
-              </Text>
-              <View style={styles.rowInputWrapper}>
-                <TextInput
-                  style={[styles.rowValue, { color: themeColors.text }]}
-                  value={rowValues[index]}
-                  onChangeText={(text) =>
-                    setRowValues((prev) =>
-                      prev.map((v, i) =>
-                        i === index ? text.replace(/[^0-9]/g, "") : v,
-                      ),
-                    )
-                  }
-                  keyboardType="numeric"
-                  placeholderTextColor={themeColors.textSecondary}
-                />
-                <Text style={[styles.rowUnit, { color: themeColors.text }]}>
-                  Ar
-                </Text>
-              </View>
-            </View>
-          ))}
-          <View style={styles.totalRow}>
-            <Text
-              style={[styles.totalLabel, { color: themeColors.textSecondary }]}
-            >
-              Total à payer
-            </Text>
+          <View style={[styles.row, { borderBottomColor: themeColors.border }]}>
+            <Text style={[styles.rowLabel, { color: themeColors.textSecondary }]}>Quantité</Text>
             <View style={styles.rowInputWrapper}>
               <TextInput
-                style={[styles.totalValue, { color: themeColors.text }]}
-                value={total}
-                onChangeText={(text) => setTotal(text.replace(/[^0-9]/g, ""))}
+                style={[styles.rowValue, { color: themeColors.text }]}
+                value={quantite}
+                onChangeText={(text) => setQuantite(text.replace(/[^0-9]/g, ""))}
                 keyboardType="numeric"
                 placeholderTextColor={themeColors.textSecondary}
               />
-              <Text style={[styles.totalUnit, { color: themeColors.text }]}>
-                Ar
+              <Text style={[styles.rowUnit, { color: themeColors.text }]}>kWh</Text>
+            </View>
+          </View>
+
+          <View style={[styles.row, { borderBottomColor: themeColors.border }]}>
+            <Text style={[styles.rowLabel, { color: themeColors.textSecondary }]}>Montant HT</Text>
+            <View style={styles.rowInputWrapper}>
+              <Text style={[styles.rowValue, styles.calculatedValue, { color: themeColors.text }]}>
+                {formatNumber(facture.montantHT)}
               </Text>
+              <Text style={[styles.rowUnit, { color: themeColors.text }]}>Ar</Text>
+            </View>
+          </View>
+
+          <View style={[styles.row, { borderBottomColor: themeColors.border }]}>
+            <Text style={[styles.rowLabel, { color: themeColors.textSecondary }]}>TVA</Text>
+            <View style={styles.rowInputWrapper}>
+              <Text style={[styles.rowValue, styles.calculatedValue, { color: themeColors.text }]}>
+                {formatNumber(facture.tva)}
+              </Text>
+              <Text style={[styles.rowUnit, { color: themeColors.text }]}>Ar</Text>
+            </View>
+          </View>
+
+          <View style={[styles.row, { borderBottomColor: themeColors.border }]}>
+            <Text style={[styles.rowLabel, { color: themeColors.textSecondary }]}>FNE</Text>
+            <View style={styles.rowInputWrapper}>
+              <Text style={[styles.rowValue, styles.calculatedValue, { color: themeColors.text }]}>
+                {formatNumber(facture.fne)}
+              </Text>
+              <Text style={[styles.rowUnit, { color: themeColors.text }]}>Ar</Text>
+            </View>
+          </View>
+
+          <View style={[styles.row, { borderBottomColor: themeColors.border }]}>
+            <Text style={[styles.rowLabel, { color: themeColors.textSecondary }]}>Taxe communale</Text>
+            <View style={styles.rowInputWrapper}>
+              <Text style={[styles.rowValue, styles.calculatedValue, { color: themeColors.text }]}>
+                {formatNumber(facture.taxeCommunale)}
+              </Text>
+              <Text style={[styles.rowUnit, { color: themeColors.text }]}>Ar</Text>
+            </View>
+          </View>
+
+          <View style={styles.totalRow}>
+            <Text style={[styles.totalLabel, { color: themeColors.textSecondary }]}>Total à payer</Text>
+            <View style={styles.rowInputWrapper}>
+              <Text style={[styles.totalValue, styles.calculatedValue, { color: themeColors.text }]}>
+                {formatNumber(facture.total)}
+              </Text>
+              <Text style={[styles.totalUnit, { color: themeColors.text }]}>Ar</Text>
             </View>
           </View>
         </View>
 
+        {/* Paiement */}
         <View style={styles.payment}>
-          <Text
-            style={[styles.paymentLabel, { color: themeColors.textSecondary }]}
-          >
-            Veuillez choisir le moyen de paiement
+          <Text style={[styles.paymentLabel, { color: themeColors.textSecondary }]}>
+            Veuillez choisir le moyen de paieme nt
           </Text>
           <View style={styles.logos}>
             <OrangeLogo onPress={() => setSuccess(true)} />
@@ -113,6 +139,7 @@ export default function FacturationScreen() {
         </View>
       </ScrollView>
 
+      {/* Modal de succès */}
       <SuccessModal
         visible={success}
         onClose={() => setSuccess(false)}
@@ -160,13 +187,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   rowLabel: { fontSize: 13 },
-  rowInputWrapper: { flexDirection: "row", alignItems: "baseline", gap: 4 },
+  rowInputWrapper: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 4,
+  },
   rowValue: {
     fontSize: 15,
     fontWeight: "700",
     padding: 0,
     minWidth: 60,
     textAlign: "right",
+  },
+  calculatedValue: {
+    opacity: 0.7,
   },
   rowUnit: { fontSize: 13, fontWeight: "600" },
   totalRow: {

@@ -4,14 +4,14 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-    Alert,
-    Linking,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function AssistanceScreen() {
@@ -35,10 +35,6 @@ export default function AssistanceScreen() {
 
   const handleCall = () => {
     Linking.openURL("tel:+261340000000");
-  };
-
-  const handleWhatsApp = () => {
-    Linking.openURL("https://wa.me/261340000000");
   };
 
   return (
@@ -71,15 +67,6 @@ export default function AssistanceScreen() {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.contactBtn, { backgroundColor: themeColors.card }]}
-          onPress={handleWhatsApp}
-        >
-          <Feather name="message-circle" size={32} color="#25D366" />
-          <Text style={[styles.contactLabel, { color: themeColors.text }]}>
-            WhatsApp
-          </Text>
-        </TouchableOpacity>
       </View>
 
       {/* FAQ */}
@@ -199,7 +186,6 @@ const styles = StyleSheet.create({
   contactRow: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 40,
     marginBottom: 32,
   },
   contactBtn: {

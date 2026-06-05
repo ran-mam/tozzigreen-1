@@ -24,24 +24,25 @@ export default function Sidebar(props: any) {
   const pathname = usePathname();
   const { theme } = useTheme();
   const themeColors = Colors[theme];
+  const isDark = theme === "dark";
+
+  const logoSrc = isDark
+    ? require("@/assets/images/tozzigreen-dark.jpeg")
+    : require("@/assets/images/tozzigreen-light.jpeg");
 
   const isActive = (id: string) =>
     id === "index" ? pathname === "/" : pathname.includes(id);
 
   return (
     <View style={[styles.container, { backgroundColor: themeColors.card }]}>
-      {/* Logo */}
+      {/* Profile header */}
       <TouchableOpacity
         onPress={() => {
           router.push("/");
           props.navigation.closeDrawer();
         }}
       >
-        <Image
-          source={require('@/assets/images/tozzigreen-logo.png')}
-          style={styles.logoImage}
-          resizeMode="contain"
-        />
+        <Image source={logoSrc} style={styles.logoImage} resizeMode="contain" />
       </TouchableOpacity>
 
       {/* Nav items */}
@@ -55,7 +56,11 @@ export default function Sidebar(props: any) {
               <Feather
                 name={icon as any}
                 size={20}
-                color={isActive(id) ? Colors[theme].primary : themeColors.textSecondary}
+                color={
+                  isActive(id)
+                    ? Colors.light.primary
+                    : themeColors.textSecondary
+                }
               />
             }
             onPress={() => {
@@ -73,7 +78,7 @@ export default function Sidebar(props: any) {
           style={styles.logout}
           activeOpacity={0.7}
           onPress={() => {
-            router.replace('/login' as any);
+            router.replace("/login" as any);
           }}
         >
           <Feather name="log-out" size={20} color="#e53e3e" />
@@ -86,6 +91,24 @@ export default function Sidebar(props: any) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  header: {
+    paddingTop: 48,
+    paddingBottom: 24,
+    paddingHorizontal: 20,
+  },
+  avatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "rgba(255,255,255,0.5)",
+    marginBottom: 10,
+  },
+  name: { fontWeight: "800", fontSize: 16 },
+  email: { fontSize: 12, marginTop: 2 },
   nav: { flex: 1, paddingVertical: 12 },
   footer: { borderTopWidth: 1, paddingVertical: 16 },
   logout: {
@@ -95,11 +118,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 20,
   },
-  logoutText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#e53e3e"
-  },
+  logoutText: { fontSize: 14, fontWeight: "600", color: "#e53e3e" },
   logoImage: {
     marginTop: 20,
     alignSelf: "center",

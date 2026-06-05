@@ -1,4 +1,4 @@
-import {Colors} from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/context/ThemeContext";
 import { Feather } from "@expo/vector-icons";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
@@ -11,17 +11,24 @@ export default function TopBar() {
   const { theme } = useTheme();
   const themeColors = Colors[theme];
 
+  const isDark = theme === "dark";
+
+  const logoSrc = isDark
+    ? require("@/assets/images/tozzigreen-dark.jpeg")
+    : require("@/assets/images/tozzigreen-light.jpeg");
+
   return (
-    <View style={[styles.container, { backgroundColor: themeColors.card, borderBottomColor: themeColors.border }]}>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() => router.replace("/")}
-      >
-        <Image
-          source={require('@/assets/images/tozzigreen-logo.png')}
-          style={styles.logoImage}
-          resizeMode="contain"
-        />
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: themeColors.card,
+          borderBottomColor: themeColors.border,
+        },
+      ]}
+    >
+      <TouchableOpacity activeOpacity={0.7} onPress={() => router.replace("/")}>
+        <Image source={logoSrc} style={styles.logoImage} resizeMode="contain" />
       </TouchableOpacity>
 
       <TouchableOpacity
