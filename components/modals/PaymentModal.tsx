@@ -1,6 +1,8 @@
 import AirtelLogo from "@/components/payment/AirtelLogo";
 import MVolaLogo from "@/components/payment/MVolaLogo";
 import OrangeLogo from "@/components/payment/OrangeLogo";
+import { Colors } from "@/constants/Colors";
+import { useTheme } from "@/context/ThemeContext";
 import { PaymentMethod } from "@/types/payments";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -17,21 +19,38 @@ export default function PaymentModal({
   onClose,
   onPay,
 }: Props) {
+  const { theme } = useTheme();
+  const themeColors = Colors[theme];
+  const isDark = theme === "dark";
+
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.backdrop}>
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: themeColors.card }]}>
           {/* Icon */}
           <View style={styles.iconWrap}>
-            <View style={styles.iconCircle}>
-              {/* card SVG placeholder */}
+            <View
+              style={[
+                styles.iconCircle,
+                {
+                  backgroundColor: isDark
+                    ? "rgba(52,211,153,0.15)"
+                    : "#e8f7d9",
+                },
+              ]}
+            >
+              {/* card */}
               <Text style={styles.cardEmoji}>💳</Text>
             </View>
           </View>
 
-          <Text style={styles.label}>Paiement</Text>
-          <Text style={styles.amount}>{amount}</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.label, { color: themeColors.textSecondary }]}>
+            Paiement
+          </Text>
+          <Text style={[styles.amount, { color: themeColors.text }]}>
+            {amount}
+          </Text>
+          <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>
             Veuillez choisir le moyen de paiement
           </Text>
 
@@ -41,8 +60,16 @@ export default function PaymentModal({
             <AirtelLogo size="sm" onPress={() => onPay("airtel")} />
           </View>
 
-          <TouchableOpacity onPress={onClose} style={styles.cancelBtn}>
-            <Text style={styles.cancelText}>Annuler</Text>
+          <TouchableOpacity
+            onPress={onClose}
+            style={[
+              styles.cancelBtn,
+              { borderColor: isDark ? "#555" : "#ddd" },
+            ]}
+          >
+            <Text style={[styles.cancelText, { color: themeColors.textSecondary }]}>
+              Annuler
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -58,7 +85,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   card: {
-    backgroundColor: "#fff",
     borderRadius: 18,
     padding: 28,
     width: 300,
@@ -71,26 +97,22 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: "#e8f7d9",
     alignItems: "center",
     justifyContent: "center",
   },
   cardEmoji: { fontSize: 28 },
   label: {
     fontSize: 15,
-    color: "#555",
     fontWeight: "500",
     marginBottom: 4,
   },
   amount: {
     fontSize: 28,
     fontWeight: "800",
-    color: "#1a1a2e",
     marginBottom: 6,
   },
   subtitle: {
     fontSize: 13,
-    color: "#777",
     marginBottom: 20,
     textAlign: "center",
   },
@@ -104,13 +126,11 @@ const styles = StyleSheet.create({
     marginTop: 30,
     width: "100%",
     borderWidth: 1,
-    borderColor: "#ddd",
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: "center",
   },
   cancelText: {
-    color: "#888",
     fontSize: 13,
   },
 });
