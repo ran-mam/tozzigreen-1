@@ -8,8 +8,6 @@ import { Text, TextInput } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-SplashScreen.preventAutoHideAsync();
-
 // Appliquer Roboto partout
 (Text as any).defaultProps = (Text as any).defaultProps || {};
 (Text as any).defaultProps.style = { fontFamily: "Roboto-Regular" };

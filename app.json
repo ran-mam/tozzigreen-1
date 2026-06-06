@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mon-projet-expo2",
-    "slug": "mon-projet-expo2",
+    "name": "Tozzigreen",
+    "slug": "tozzigreen",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -50,7 +50,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "26eea621-13f5-4083-aeda-56e096e5478d"
+        "projectId": "71ae1e37-3920-401d-bd9d-f3f0dc0b3da8"
       }
     }
   }

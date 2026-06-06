@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
 import {
     Image,
     KeyboardAvoidingView,
@@ -8,20 +9,68 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Alert,
+    ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginAPI } from '@/services/api';
 
 export default function Login() {
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [identifierError, setIdentifierError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [serverError, setServerError] = useState('');
 
-    const handleLogin = () => {
-        // console.log('Identifiant:', identifier);
-        // console.log('Mot de passe:', password);
-        alert('Connexion en cours...');
+    useEffect(() => {
+        SplashScreen.hideAsync();
+    }, []);
 
-        router.replace('/(drawer)' as any);
+    const handleLogin = async () => {
+
+        // Réinitialiser les erreurs
+        setIdentifierError('');
+        setPasswordError('');
+        setServerError('');
+
+        // Validation
+        let hasError = false;
+
+        if (!identifier.trim()) {
+            setIdentifierError('L\'identifiant est requis.');
+            hasError = true;
+        }
+
+        if (!password.trim()) {
+            setPasswordError('Le mot de passe est requis.');
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        setLoading(true);
+
+        try {
+            const data = await loginAPI(identifier, password);
+            console.log('Réponse:', data);
+
+            if (data.code === 0) {
+                await AsyncStorage.setItem('token', data.data.token);
+                router.replace('/(drawer)' as any);
+            } else {
+
+                setIdentifierError('Identifiant ou numéro de téléphone incorrect.');
+                setPasswordError('Mot de passe incorrect.');
+            }
+        } catch (error) {
+            console.error('Erreur login:', error);
+            setServerError('Impossible de se connecter au serveur.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -47,30 +96,67 @@ export default function Login() {
                         />
                     </View>
 
+                    {/* Erreur serveur */}
+                    {serverError !== '' && (
+                        <View style={styles.serverErrorBox}>
+                            <Text style={styles.serverErrorText}>{serverError}</Text>
+                        </View>
+                    )}
+
+                    {/* Champ Identifiant */}
                     <Text style={styles.label}>Identifiant ou numéro de téléphone</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
-                            style={styles.input}
+                            style={[
+                                styles.input,
+                                identifierError !== '' && styles.inputError,
+                            ]}
                             placeholderTextColor="#999"
                             value={identifier}
-                            onChangeText={setIdentifier}
+                            onChangeText={(text) => {
+                                setIdentifier(text);
+                                if (identifierError) setIdentifierError('');
+                                if (serverError) setServerError('');
+                            }}
                             autoCapitalize="none"
                         />
                     </View>
+                    {identifierError !== '' && (
+                        <Text style={styles.errorText}>{identifierError}</Text>
+                    )}
 
+                    {/* Champ Mot de passe */}
                     <Text style={styles.label}>Mot de passe</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
-                            style={styles.input}
+                            style={[
+                                styles.input,
+                                passwordError !== '' && styles.inputError,
+                            ]}
                             placeholderTextColor="#999"
                             value={password}
-                            onChangeText={setPassword}
+                            onChangeText={(text) => {
+                                setPassword(text);
+                                if (passwordError) setPasswordError('');
+                                if (serverError) setServerError('');
+                            }}
                             secureTextEntry
                         />
                     </View>
+                    {passwordError !== '' && (
+                        <Text style={styles.errorText}>{passwordError}</Text>
+                    )}
 
-                    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-                        <Text style={styles.loginButtonText}>Se connecter</Text>
+                    <TouchableOpacity
+                        style={styles.loginButton}
+                        onPress={handleLogin}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                            <Text style={styles.loginButtonText}>Se connecter</Text>
+                        )}
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.forgotPassword}>
@@ -119,13 +205,13 @@ const styles = StyleSheet.create({
         height: 36,
     },
     label: {
-        fontSize: 14, 
-        fontWeight: '500', 
-        color: '#000', 
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#000',
         marginBottom: 8
     },
     inputContainer: {
-        marginBottom: 16
+        marginBottom: 4,
     },
     input: {
         backgroundColor: '#F5F5F5',
@@ -134,7 +220,32 @@ const styles = StyleSheet.create({
         paddingVertical: 14,
         fontSize: 16,
         color: '#000',
-        borderWidth: 1, borderColor: '#E0E0E0'
+        borderWidth: 1,
+        borderColor: '#E0E0E0',
+    },
+    inputError: {
+        borderColor: '#e53e3e',
+        borderWidth: 1.5,
+    },
+    errorText: {
+        color: '#e53e3e',
+        fontSize: 12,
+        marginBottom: 12,
+        marginTop: 4,
+    },
+    serverErrorBox: {
+        backgroundColor: '#fff5f5',
+        borderWidth: 1,
+        borderColor: '#e53e3e',
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 16,
+    },
+    serverErrorText: {
+        color: '#e53e3e',
+        fontSize: 13,
+        textAlign: 'center',
+        fontWeight: '500',
     },
     loginButton: {
         backgroundColor: '#9CC22E',
@@ -154,7 +265,7 @@ const styles = StyleSheet.create({
         marginBottom: 24
     },
     forgotPasswordText: {
-        color: '#666', 
+        color: '#666',
         fontSize: 14
     },
 });

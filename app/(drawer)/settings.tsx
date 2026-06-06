@@ -102,7 +102,7 @@ export default function SettingsScreen() {
                         {USER.name}
                     </Text>
                     <Text style={[styles.identityId, dynamicStyles.identityId]}>
-                        Identifiant: {USER.id}
+                        Identifiant : {USER.id}
                     </Text>
                 </View>
             </View>
