@@ -11,6 +11,7 @@ import {
     View,
     ActivityIndicator,
     Platform,
+    Alert
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -48,6 +49,14 @@ export default function HistoriqueScreen() {
             const endDate = `${dateTo.getFullYear()}-${String(dateTo.getMonth() + 1).padStart(2, '0')}-${String(dateTo.getDate()).padStart(2, '0')}`;
 
             const data = await getOrders('261002', startDate, endDate, pageNum, PAGE_SIZE);
+
+            if (data.code === 401) {
+                Alert.alert('Session expirée', 'Veuillez vous reconnecter.', [
+                    { text: 'OK', onPress: () => router.replace('/login' as any) }
+                ]);
+                setLoading(false);
+                return;
+            }
 
             if (data.code === 0) {
                 const newBills = data.data?.bill_list || [];

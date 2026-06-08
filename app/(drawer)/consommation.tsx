@@ -3,6 +3,7 @@ import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/context/ThemeContext";
 import { Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useRouter } from "expo-router";
 import {
     StyleSheet,
     Text,
@@ -23,6 +24,7 @@ const STATS = [
 ];
 
 export default function ConsommationScreen() {
+    const router = useRouter();
     const { theme } = useTheme();
     const themeColors = Colors[theme];
 
@@ -46,6 +48,14 @@ export default function ConsommationScreen() {
 
             const data = await getMonthlyBill('261002', '0270100558021', month);
             console.log('Conso mensuelle:', data);
+
+            if (data.code === 401) {
+                Alert.alert('Session expirée', 'Veuillez vous reconnecter.', [
+                    { text: 'OK', onPress: () => router.replace('/login' as any) }
+                ]);
+                setLoading(false);
+                return;
+            }
 
             if (data.code === 0) {
                 const d = data.data;

@@ -173,7 +173,11 @@ export default function SettingsScreen() {
                     <Switch
                         value={notifications}
                         onValueChange={setNotifications}
-                        trackColor={{ false: "#ddd", true: "#939597" }}
+                        trackColor={{
+                            false: isDarkMode ? "#333333" : "#e0e0e0",
+                            true: BrandColors.primary,
+                        }}
+                        thumbColor={notifications ? "#ffffff" : "#f0f0f0"}
                     />
                 </View>
                 <View style={[styles.divider, dynamicStyles.divider]} />
@@ -184,8 +188,12 @@ export default function SettingsScreen() {
                     </Text>
                     <Switch
                         value={isDarkMode}
-                        onValueChange={toggleTheme} // toggles global theme
-                        trackColor={{ false: "#ddd", true: "#939597" }}
+                        onValueChange={toggleTheme}
+                        trackColor={{
+                            false: isDarkMode ? "#333333" : "#e0e0e0",
+                            true: BrandColors.primary,
+                        }}
+                        thumbColor={isDarkMode ? "#ffffff" : "#f0f0f0"}
                     />
                 </View>
             </View>
@@ -258,6 +266,26 @@ export default function SettingsScreen() {
                 <Feather name="log-out" size={20} color="#e53e3e" />
                 <Text style={styles.logoutText}>Se déconnecter</Text>
             </TouchableOpacity>
+
+            {/* Bouton test temporaire
+            <TouchableOpacity
+                style={[styles.logoutBtn, { backgroundColor: '#FFF3E0', borderWidth: 1, borderColor: '#FF9800' }]}
+                onPress={async () => {
+                    await AsyncStorage.removeItem('token');
+                    Alert.alert(
+                        '🧪 Token supprimé',
+                        'Le token a été supprimé. Essayez maintenant d\'accéder à l\'Historique ou la Facturation.',
+                        [
+                            { text: 'OK' }
+                        ]
+                    );
+                }}
+            >
+                <Feather name="alert-triangle" size={20} color="#FF9800" />
+                <Text style={{ color: '#FF9800', fontWeight: '600', fontSize: 15 }}>
+                    🧪 Test : Supprimer le token
+                </Text>
+            </TouchableOpacity> */}
 
             <View style={{ height: 40 }} />
         </ScrollView>

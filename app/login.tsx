@@ -31,13 +31,10 @@ export default function Login() {
     }, []);
 
     const handleLogin = async () => {
-
-        // Réinitialiser les erreurs
         setIdentifierError('');
         setPasswordError('');
         setServerError('');
 
-        // Validation
         let hasError = false;
 
         if (!identifier.trim()) {
@@ -62,7 +59,6 @@ export default function Login() {
                 await AsyncStorage.setItem('token', data.data.token);
                 router.replace('/(drawer)' as any);
             } else {
-
                 setIdentifierError('Identifiant ou numéro de téléphone incorrect.');
                 setPasswordError('Mot de passe incorrect.');
             }
@@ -76,12 +72,7 @@ export default function Login() {
 
     return (
         <View style={styles.container}>
-
-            <SafeAreaView edges={['top']} style={styles.headerSafeArea}>
-                <View style={styles.header}>
-                    <Text style={styles.headerText}>Login</Text>
-                </View>
-            </SafeAreaView>
+            <SafeAreaView edges={['top']} style={styles.safeArea} />
 
             <KeyboardAvoidingView
                 style={styles.flex}
@@ -97,14 +88,12 @@ export default function Login() {
                         />
                     </View>
 
-                    {/* Erreur serveur */}
                     {serverError !== '' && (
                         <View style={styles.serverErrorBox}>
                             <Text style={styles.serverErrorText}>{serverError}</Text>
                         </View>
                     )}
 
-                    {/* Champ Identifiant */}
                     <Text style={styles.label}>Identifiant ou numéro de téléphone</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
@@ -126,7 +115,6 @@ export default function Login() {
                         <Text style={styles.errorText}>{identifierError}</Text>
                     )}
 
-                    {/* Champ Mot de passe */}
                     <Text style={styles.label}>Mot de passe</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
@@ -177,31 +165,20 @@ export default function Login() {
 
                 </View>
             </KeyboardAvoidingView>
-
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, backgroundColor: '#fff'
+        flex: 1,
+        backgroundColor: '#fff',
     },
-    headerSafeArea: {
-        backgroundColor: '#000'
-    },
-    header: {
-        backgroundColor: '#000',
-        paddingVertical: 6,
-        paddingHorizontal: 24,
-        alignItems: 'flex-start'
-    },
-    headerText: {
-        color: '#fff',
-        fontSize: 12,
-        fontWeight: '500'
+    safeArea: {
+        backgroundColor: '#fff',
     },
     flex: {
-        flex: 1
+        flex: 1,
     },
     body: {
         flex: 1,
@@ -220,8 +197,10 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         color: '#000',
-        marginBottom: 8
+        marginBottom: 8,
+        // marginTop: 20,
     },
+
     inputContainer: {
         marginBottom: 4,
         position: 'relative',
@@ -273,19 +252,19 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         alignItems: 'center',
         marginTop: 8,
-        marginBottom: 16
+        marginBottom: 16,
     },
     loginButtonText: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: '600'
+        fontWeight: '600',
     },
     forgotPassword: {
         alignItems: 'center',
-        marginBottom: 24
+        marginBottom: 24,
     },
     forgotPasswordText: {
         color: '#666',
-        fontSize: 14
+        fontSize: 14,
     },
 });

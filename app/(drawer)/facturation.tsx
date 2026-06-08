@@ -45,8 +45,16 @@ export default function FacturationScreen() {
                 '02',
                 quantite
             );
-            
+
             console.log('Réponse API:', data);
+
+            if (data.code === 401) {
+                Alert.alert('Session expirée', 'Veuillez vous reconnecter.', [
+                    { text: 'OK', onPress: () => router.replace('/login' as any) }
+                ]);
+                setLoading(false);
+                return;
+            }
 
             if (data.code === 0) {
                 setFactureAPI(data.data);
@@ -78,6 +86,14 @@ export default function FacturationScreen() {
             );
 
             console.log('Réponse paiement:', data);
+
+            if (data.code === 401) {
+                Alert.alert('Session expirée', 'Veuillez vous reconnecter.', [
+                    { text: 'OK', onPress: () => router.replace('/login' as any) }
+                ]);
+                setLoading(false);
+                return;
+            }
 
             if (data.code === 0) {
                 setSuccess(true);

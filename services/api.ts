@@ -24,6 +24,15 @@ const getHeaders = async () => {
     };
 };
 
+// Vérifier si le token est expiré
+const handle401 = async (data: any) => {
+    if (data.code === 401) {
+        await AsyncStorage.removeItem('token');
+        return true;
+    }
+    return false;
+};
+
 // LOGIN - utilise /v1/
 export const loginAPI = async (username: string, password: string) => {
     const response = await fetch(`${BASE_URL_AUTH}/auth/login`, {
@@ -50,7 +59,9 @@ export const calculateBill = async (
         headers,
         body: JSON.stringify({ consumer_no, meter_no, recharge_type, charge_value }),
     });
-    return response.json();
+    const data = await response.json();
+    await handle401(data);
+    return data;
 };
 
 // TOKEN ISSUE - utilise /api/v1/
@@ -66,7 +77,9 @@ export const issueToken = async (
         headers,
         body: JSON.stringify({ consumer_no, meter_no, bill_session_id, token_send_flag }),
     });
-    return response.json();
+    const data = await response.json();
+    await handle401(data);
+    return data;
 };
 
 // ORDER QUERY - utilise /api/v1/
@@ -80,7 +93,9 @@ export const getOrders = async (
     const headers = await getHeaders();
     const url = `${BASE_URL}/consumers/order?consumer_no=${consumer_no}&start_date=${start_date}&end_date=${end_date}&page_start=${page_start}&page_size=${page_size}`;
     const response = await fetch(url, { method: 'GET', headers });
-    return response.json();
+    const data = await response.json();
+    await handle401(data);
+    return data;
 };
 
 // MONTHLY BILL - utilise /api/v1/
@@ -92,5 +107,9 @@ export const getMonthlyBill = async (
     const headers = await getHeaders();
     const url = `${BASE_URL}/consumers/monthly_bill?consumer_no=${consumer_no}&meter_no=${meter_no}&date=${date}`;
     const response = await fetch(url, { method: 'GET', headers });
-    return response.json();
+    const data = await response.json();
+    await handle401(data);
+    return data;
 };
+
+export { handle401 };
