@@ -4,7 +4,7 @@ import SuccessModal from "@/components/modals/SuccessModal";
 import StatBadge from "@/components/ui/StatBadge";
 import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/context/ThemeContext";
-import { Feather } from "@expo/vector-icons";
+// import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -16,10 +16,30 @@ import {
 } from "react-native";
 
 const GRID = [
-  { label: "Recharger", icon: "credit-card", route: "facturation" },
-  { label: "Facturation", icon: "file-text", route: "historique" },
-  { label: "Consommation", icon: "activity", route: "consommation" },
-  { label: "Assistance", icon: "help-circle", route: "assistance" },
+  {
+    label: "Recharger",
+    emoji: "💳",
+    route: "facturation",
+    bgColor: "#E8F5E9",
+  },
+  {
+    label: "Facturation",
+    emoji: "🧾",
+    route: "historique",
+    bgColor: "#E3F2FD",
+  },
+  {
+    label: "Consommation",
+    emoji: "⚡",
+    route: "consommation",
+    bgColor: "#FFF3E0",
+  },
+  {
+    label: "Assistance",
+    emoji: "🎧",
+    route: "assistance",
+    bgColor: "#F3E5F5",
+  },
 ] as const;
 
 export default function AccueilScreen() {
@@ -61,7 +81,7 @@ export default function AccueilScreen() {
 
         {/* Grid */}
         <View style={styles.grid}>
-          {GRID.map(({ label, icon, route }) => (
+          {GRID.map(({ label, emoji, route, bgColor }) => (
             <TouchableOpacity
               key={label}
               style={[
@@ -72,11 +92,11 @@ export default function AccueilScreen() {
                 },
               ]}
               activeOpacity={0.8}
-              onPress={() =>
-                route ? router.push(`/${route}`) : setPayModal(true)
-              }
+              onPress={() => router.push(`/${route}`)}
             >
-              <Feather name={icon as any} size={40} color={themeColors.text} />
+              <View style={[styles.iconCircle, { backgroundColor: bgColor }]}>
+                <Text style={styles.emoji}>{emoji}</Text>
+              </View>
               <Text style={[styles.gridLabel, { color: themeColors.text }]}>
                 {label}
               </Text>
@@ -111,7 +131,6 @@ const styles = StyleSheet.create({
   banner: {
     padding: 20,
     alignItems: "center",
-    marginBottom: 10,
   },
   bannerTitle: {
     color: "#fff",
@@ -144,6 +163,17 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 18,
   },
+  iconCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
+  },
+  emoji: {
+    fontSize: 28,
+  },
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -154,11 +184,17 @@ const styles = StyleSheet.create({
   gridItem: {
     width: "47%",
     alignItems: "center",
-    padding: 34,
-    gap: 12,
-    borderRadius: 12,
+    paddingVertical: 28,
+    paddingHorizontal: 10,
+    gap: 8,
+    borderRadius: 16,
     borderWidth: 1,
     marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
   },
   gridLabel: {
     fontSize: 14,

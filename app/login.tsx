@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Feather } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
 import {
     Image,
@@ -9,7 +10,6 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    Alert,
     ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -23,6 +23,7 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const [identifierError, setIdentifierError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [serverError, setServerError] = useState('');
 
     useEffect(() => {
@@ -140,8 +141,19 @@ export default function Login() {
                                 if (passwordError) setPasswordError('');
                                 if (serverError) setServerError('');
                             }}
-                            secureTextEntry
+                            autoCapitalize="none"
+                            secureTextEntry={!showPassword}
                         />
+                        <TouchableOpacity
+                            style={styles.eyeButton}
+                            onPress={() => setShowPassword(!showPassword)}
+                        >
+                            <Feather
+                                name={showPassword ? 'eye-off' : 'eye'}
+                                size={20}
+                                color="#999"
+                            />
+                        </TouchableOpacity>
                     </View>
                     {passwordError !== '' && (
                         <Text style={styles.errorText}>{passwordError}</Text>
@@ -212,6 +224,17 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         marginBottom: 4,
+        position: 'relative',
+    },
+    eyeButton: {
+        position: 'absolute',
+        right: 14,
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center',
+    },
+    eyeIcon: {
+        fontSize: 20,
     },
     input: {
         backgroundColor: '#F5F5F5',

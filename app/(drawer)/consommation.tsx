@@ -64,7 +64,7 @@ export default function ConsommationScreen() {
         {/* Filtre période */}
         <View style={[styles.filterCard, { backgroundColor: themeColors.card }]}>
           <Text style={[styles.filterTitle, { color: themeColors.text }]}>
-            Période
+            Sélectionnez une période
           </Text>
 
           {/* Date Début */}

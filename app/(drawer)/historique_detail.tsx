@@ -31,7 +31,7 @@ export default function FactureDetailScreen() {
           >
             Facture introuvable.
           </Text>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.push('/historique' as any)}>
             <Text style={[styles.backLink, { color: Colors.light.primary }]}>
               ← Retour à l&apos;historique
             </Text>
@@ -106,17 +106,13 @@ export default function FactureDetailScreen() {
         <View style={styles.actions}>
           <TouchableOpacity
             style={[styles.backBtn, { borderColor: Colors.light.primary }]}
-            onPress={() => router.back()}
+            onPress={() => router.push('/historique' as any)}
           >
             <Text style={[styles.backBtnText, { color: Colors.light.primary }]}>
               Retour à l&apos;historique
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.payBtn, { backgroundColor: Colors.light.primary }]}
-          >
-            <Text style={styles.payBtnText}>Payer maintenant</Text>
-          </TouchableOpacity>
+          
         </View>
       </ScrollView>
     </View>

@@ -5,7 +5,6 @@ import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/context/ThemeContext";
 import { PaymentMethod } from "@/types/payments";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
 interface Props {
   visible: boolean;
   amount: string;
