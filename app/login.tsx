@@ -233,9 +233,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         justifyContent: 'center',
     },
-    eyeIcon: {
-        fontSize: 20,
-    },
     input: {
         backgroundColor: '#F5F5F5',
         borderRadius: 0,

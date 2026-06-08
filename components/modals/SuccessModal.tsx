@@ -1,13 +1,15 @@
 import { BrandColors, Colors } from "@/constants/Colors";
 import { useTheme } from "@/context/ThemeContext";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
 interface Props {
   visible: boolean;
   onClose: () => void;
   onViewBill: () => void;
+  tokenCode?: string;
 }
 
-export default function SuccessModal({ visible, onClose, onViewBill }: Props) {
+export default function SuccessModal({ visible, onClose, onViewBill, tokenCode }: Props) {
   const { theme } = useTheme();
   const themeColors = Colors[theme];
   const isLight = theme === "light";
@@ -19,9 +21,7 @@ export default function SuccessModal({ visible, onClose, onViewBill }: Props) {
           <View
             style={[
               styles.iconCircle,
-              {
-                backgroundColor: isLight ? "#e8f7d9" : "#1a3d1a",
-              },
+              { backgroundColor: isLight ? "#e8f7d9" : "#1a3d1a" },
             ]}
           >
             <Text style={styles.check}>✓</Text>
@@ -29,11 +29,32 @@ export default function SuccessModal({ visible, onClose, onViewBill }: Props) {
           <Text style={[styles.title, { color: themeColors.text }]}>
             Paiement réussi
           </Text>
+
+          {/* Code de recharge */}
+          {tokenCode && (
+            <View style={styles.tokenBox}>
+              <Text style={[styles.tokenLabel, { color: themeColors.textSecondary }]}>
+                Code de recharge
+              </Text>
+              <Text style={styles.tokenCode}>
+                {tokenCode.replace(/(\d{4})/g, '$1 ').trim()}
+              </Text>
+            </View>
+          )}
+
           <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>
-            Vous pouvez consulter votre facture
+            {tokenCode
+              ? 'Tapez ce code sur votre compteur électrique'
+              : 'Vous pouvez consulter votre facture'
+            }
           </Text>
-          <TouchableOpacity onPress={onClose} style={styles.btn}>
-            <Text style={styles.btnText}>Fermer</Text>
+          <TouchableOpacity onPress={onViewBill} style={styles.btn}>
+            <Text style={styles.btnText}>Voir la facture</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+            <Text style={[styles.closeText, { color: themeColors.textSecondary }]}>
+              Fermer
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -72,6 +93,26 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     marginBottom: 6,
   },
+  tokenBox: {
+    backgroundColor: '#f5f5f5',
+    borderRadius: 12,
+    padding: 16,
+    marginVertical: 16,
+    width: '100%',
+    alignItems: 'center',
+  },
+  tokenLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    marginBottom: 6,
+    textTransform: 'uppercase',
+  },
+  tokenCode: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: BrandColors.primary,
+    letterSpacing: 2,
+  },
   subtitle: {
     fontSize: 13,
     marginBottom: 22,
@@ -88,5 +129,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 15,
     fontWeight: "700",
+  },
+  closeBtn: {
+    marginTop: 12,
+    paddingVertical: 8,
+  },
+  closeText: {
+    fontSize: 14,
+    fontWeight: '500',
   },
 });

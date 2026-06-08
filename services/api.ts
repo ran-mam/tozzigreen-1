@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BASE_URL = 'http://220.249.121.186:10035/v1';
+const BASE_URL_AUTH = 'http://220.249.121.186:10035/v1';
+const BASE_URL = 'http://220.249.121.186:10035/api/v1';
 
 const generateUUID = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -23,9 +24,9 @@ const getHeaders = async () => {
     };
 };
 
-// LOGIN
+// LOGIN - utilise /v1/
 export const loginAPI = async (username: string, password: string) => {
-    const response = await fetch(`${BASE_URL}/auth/login`, {
+    const response = await fetch(`${BASE_URL_AUTH}/auth/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -36,7 +37,7 @@ export const loginAPI = async (username: string, password: string) => {
     return response.json();
 };
 
-// BILL CALCULATION
+// BILL CALCULATION - utilise /api/v1/
 export const calculateBill = async (
     consumer_no: string,
     meter_no: string,
@@ -52,7 +53,7 @@ export const calculateBill = async (
     return response.json();
 };
 
-// TOKEN ISSUE
+// TOKEN ISSUE - utilise /api/v1/
 export const issueToken = async (
     consumer_no: string,
     meter_no: string,
@@ -68,17 +69,28 @@ export const issueToken = async (
     return response.json();
 };
 
-// ORDER QUERY
+// ORDER QUERY - utilise /api/v1/
 export const getOrders = async (
     consumer_no: string,
     start_date: string,
-    end_date: string
+    end_date: string,
+    page_start: number = 1,
+    page_size: number = 10
 ) => {
     const headers = await getHeaders();
-    const url = `${BASE_URL}/consumers/order?consumer_no=${consumer_no}&start_date=${start_date}&end_date=${end_date}`;
-    const response = await fetch(url, {
-        method: 'GET',
-        headers,
-    });
+    const url = `${BASE_URL}/consumers/order?consumer_no=${consumer_no}&start_date=${start_date}&end_date=${end_date}&page_start=${page_start}&page_size=${page_size}`;
+    const response = await fetch(url, { method: 'GET', headers });
+    return response.json();
+};
+
+// MONTHLY BILL - utilise /api/v1/
+export const getMonthlyBill = async (
+    consumer_no: string,
+    meter_no: string,
+    date: string
+) => {
+    const headers = await getHeaders();
+    const url = `${BASE_URL}/consumers/monthly_bill?consumer_no=${consumer_no}&meter_no=${meter_no}&date=${date}`;
+    const response = await fetch(url, { method: 'GET', headers });
     return response.json();
 };

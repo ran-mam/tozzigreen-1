@@ -5,7 +5,9 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
+  KeyboardAvoidingView,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -38,104 +40,112 @@ export default function AssistanceScreen() {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: themeColors.background }]}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "android" ? "padding" : "height"}
+      style={{ flex: 1 }}
     >
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.replace("/(drawer)")}>
-          <Feather name="arrow-left" size={24} color={themeColors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: themeColors.text }]}>
-          Assistance
-        </Text>
-        <View style={{ width: 24 }} />
-      </View>
-
-      <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>
-        Comment pouvons-nous vous aider ?
-      </Text>
-
-      {/* Contact rapide */}
-      <View style={styles.contactRow}>
-        <TouchableOpacity
-          style={[styles.contactBtn, { backgroundColor: themeColors.card }]}
-          onPress={handleCall}
-        >
-          <Feather name="phone" size={32} color={BrandColors.primary} />
-          <Text style={[styles.contactLabel, { color: themeColors.text }]}>
-            Appeler
-          </Text>
-        </TouchableOpacity>
-
-      </View>
-
-      {/* FAQ */}
-      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>
-        Questions fréquentes
-      </Text>
-      {FAQ.map((item, index) => (
-        <View key={index}>
-          <TouchableOpacity
-            style={[styles.faqItem, { borderBottomColor: themeColors.border }]}
-            onPress={() =>
-              setExpandedIndex(expandedIndex === index ? null : index)
-            }
-          >
-            <Text style={[styles.faqQuestion, { color: themeColors.text }]}>
-              {item.question}
-            </Text>
-            <Feather
-              name={expandedIndex === index ? "chevron-up" : "chevron-down"}
-              size={20}
-              color={themeColors.chevron}
-            />
-          </TouchableOpacity>
-          {expandedIndex === index && (
-            <Text
-              style={[styles.faqAnswer, { color: themeColors.textSecondary }]}
-            >
-              {item.answer}
-            </Text>
-          )}
-        </View>
-      ))}
-
-      {/* SÉPARATEUR */}
-      <View
-        style={[styles.separator, { backgroundColor: themeColors.border }]}
-      />
-
-      {/* Message */}
-      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>
-        Envoyer un message
-      </Text>
-      <TextInput
-        style={[
-          styles.textArea,
-          {
-            backgroundColor: themeColors.card,
-            color: themeColors.text,
-            borderColor: themeColors.border,
-          },
-        ]}
-        placeholder="Décrivez votre problème..."
-        placeholderTextColor={themeColors.textSecondary}
-        value={message}
-        onChangeText={setMessage}
-        multiline
-        numberOfLines={4}
-      />
-      <TouchableOpacity
-        style={[styles.sendBtn, { backgroundColor: BrandColors.primary }]}
-        onPress={handleSend}
+      <ScrollView
+        style={[styles.container, { backgroundColor: themeColors.background }]}
+        keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.sendText}>Envoyer</Text>
-      </TouchableOpacity>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.replace("/(drawer)")}>
+            <Feather name="arrow-left" size={24} color={themeColors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.title, { color: themeColors.text }]}>
+            Assistance
+          </Text>
+          <View style={{ width: 24 }} />
+        </View>
 
-      <Text style={[styles.footer, { color: themeColors.textSecondary }]}>
-        Service disponible 24h/24 et 7j/7
-      </Text>
-    </ScrollView>
+        <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>
+          Comment pouvons-nous vous aider ?
+        </Text>
+
+        {/* Contact rapide */}
+        <View style={styles.contactRow}>
+          <TouchableOpacity
+            style={[styles.contactBtn, { backgroundColor: themeColors.card }]}
+            onPress={handleCall}
+          >
+            <Feather name="phone" size={32} color={BrandColors.primary} />
+            <Text style={[styles.contactLabel, { color: themeColors.text }]}>
+              Appeler
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* FAQ */}
+        <Text style={[styles.sectionTitle, { color: themeColors.text }]}>
+          Questions fréquentes
+        </Text>
+        {FAQ.map((item, index) => (
+          <View key={index}>
+            <TouchableOpacity
+              style={[
+                styles.faqItem,
+                { borderBottomColor: themeColors.border },
+              ]}
+              onPress={() =>
+                setExpandedIndex(expandedIndex === index ? null : index)
+              }
+            >
+              <Text style={[styles.faqQuestion, { color: themeColors.text }]}>
+                {item.question}
+              </Text>
+              <Feather
+                name={expandedIndex === index ? "chevron-up" : "chevron-down"}
+                size={20}
+                color={themeColors.chevron}
+              />
+            </TouchableOpacity>
+            {expandedIndex === index && (
+              <Text
+                style={[styles.faqAnswer, { color: themeColors.textSecondary }]}
+              >
+                {item.answer}
+              </Text>
+            )}
+          </View>
+        ))}
+
+        {/* SÉPARATEUR */}
+        <View
+          style={[styles.separator, { backgroundColor: themeColors.border }]}
+        />
+
+        {/* Message */}
+        <Text style={[styles.sectionTitle, { color: themeColors.text }]}>
+          Envoyer un message
+        </Text>
+        <TextInput
+          style={[
+            styles.textArea,
+            {
+              backgroundColor: themeColors.card,
+              color: themeColors.text,
+              borderColor: themeColors.border,
+            },
+          ]}
+          placeholder="Décrivez votre problème..."
+          placeholderTextColor={themeColors.textSecondary}
+          value={message}
+          onChangeText={setMessage}
+          multiline
+          numberOfLines={4}
+        />
+        <TouchableOpacity
+          style={[styles.sendBtn, { backgroundColor: BrandColors.primary }]}
+          onPress={handleSend}
+        >
+          <Text style={styles.sendText}>Envoyer</Text>
+        </TouchableOpacity>
+
+        <Text style={[styles.footer, { color: themeColors.textSecondary }]}>
+          Service disponible 24h/24 et 7j/7
+        </Text>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
