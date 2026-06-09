@@ -17,6 +17,8 @@ import { Feather } from "@expo/vector-icons";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { getOrders } from '@/services/api';
 
+import Skeleton from '@/components/ui/Skeleton';
+
 const PAGE_SIZE = 10;
 
 export default function HistoriqueScreen() {
@@ -134,10 +136,71 @@ export default function HistoriqueScreen() {
                 </TouchableOpacity>
             </View>
 
+            {/* SKELETON LOADER */}
+            {loading && (
+                <View style={styles.skeletonContainer}>
+
+                    <Skeleton
+                        width={120}
+                        height={12}
+                        style={{
+                            marginBottom: 16,
+                            marginTop: 8,
+                        }}
+                    />
+
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <View
+                            key={i}
+                            style={[
+                                styles.billCard,
+                                { backgroundColor: themeColors.card }
+                            ]}
+                        >
+                            <View style={styles.billLeft}>
+
+                                <Skeleton
+                                    width={8}
+                                    height={8}
+                                    borderRadius={4}
+                                />
+
+                                <View>
+                                    <Skeleton
+                                        width={130}
+                                        height={14}
+                                        style={{ marginBottom: 6 }}
+                                    />
+
+                                    <Skeleton
+                                        width={90}
+                                        height={12}
+                                    />
+                                </View>
+
+                            </View>
+
+                            <View style={styles.billRight}>
+
+                                <Skeleton
+                                    width={70}
+                                    height={14}
+                                />
+
+                                <Skeleton
+                                    width={16}
+                                    height={16}
+                                    borderRadius={8}
+                                />
+
+                            </View>
+                        </View>
+                    ))}
+                </View>
+            )}
+
             {/* Liste */}
-            {loading ? (
-                <ActivityIndicator size="large" color={Colors.light.primary} style={{ marginTop: 60 }} />
-            ) : orders.length === 0 ? (
+            {!loading && orders.length === 0 && (
                 <View style={styles.emptyState}>
                     <Feather name="inbox" size={48} color={themeColors.textSecondary} />
                     <Text style={[styles.emptyTitle, { color: themeColors.text }]}>Aucune facture</Text>
@@ -145,7 +208,9 @@ export default function HistoriqueScreen() {
                         Essayez de modifier la période
                     </Text>
                 </View>
-            ) : (
+            )}
+
+            {!loading && orders.length > 0 && (
                 <ScrollView contentContainerStyle={styles.content}>
                     {Object.entries(groupedOrders).map(([month, bills]: [string, any]) => (
                         <View key={month} style={styles.section}>
@@ -183,15 +248,70 @@ export default function HistoriqueScreen() {
                             ))}
                         </View>
                     ))}
+
                     {hasMore && (
-                        <TouchableOpacity style={styles.loadMore} onPress={handleLoadMore} disabled={loadingMore}>
-                            {loadingMore ? (
-                                <ActivityIndicator size="small" color={Colors.light.primary} />
+                        <>
+                            {!loadingMore ? (
+                                <TouchableOpacity
+                                    style={styles.loadMore}
+                                    onPress={handleLoadMore}
+                                >
+                                    <Text style={styles.loadMoreText}>
+                                        Afficher plus de factures
+                                    </Text>
+                                </TouchableOpacity>
                             ) : (
-                                <Text style={styles.loadMoreText}>Afficher plus de factures</Text>
+                                <View style={{ paddingHorizontal: 20 }}>
+                                    {[1, 2, 3].map((i) => (
+                                        <View
+                                            key={i}
+                                            style={[
+                                                styles.billCard,
+                                                {
+                                                    backgroundColor: themeColors.card,
+                                                },
+                                            ]}
+                                        >
+                                            <View style={styles.billLeft}>
+                                                <Skeleton
+                                                    width={8}
+                                                    height={8}
+                                                    borderRadius={4}
+                                                />
+
+                                                <View>
+                                                    <Skeleton
+                                                        width={130}
+                                                        height={14}
+                                                        style={{ marginBottom: 6 }}
+                                                    />
+
+                                                    <Skeleton
+                                                        width={90}
+                                                        height={12}
+                                                    />
+                                                </View>
+                                            </View>
+
+                                            <View style={styles.billRight}>
+                                                <Skeleton
+                                                    width={70}
+                                                    height={14}
+                                                />
+
+                                                <Skeleton
+                                                    width={16}
+                                                    height={16}
+                                                    borderRadius={8}
+                                                />
+                                            </View>
+                                        </View>
+                                    ))}
+                                </View>
                             )}
-                        </TouchableOpacity>
+                        </>
                     )}
+
                     <View style={{ height: 40 }} />
                 </ScrollView>
             )}
@@ -236,6 +356,18 @@ const styles = StyleSheet.create({
     },
     datePillText: { fontSize: 13, fontWeight: '600' },
     dateSeparator: { fontSize: 13 },
+    skeletonContainer: {
+        paddingHorizontal: 20,
+        paddingTop: 10,
+    },
+    skeletonCard: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 16,
+        borderRadius: 14,
+        marginBottom: 8,
+    },
     content: { paddingBottom: 32 },
     section: { paddingHorizontal: 20, marginBottom: 4 },
     monthHeader: {
@@ -260,48 +392,14 @@ const styles = StyleSheet.create({
         gap: 12,
         flex: 1,
     },
-    billDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4
-    },
-    billRef: {
-        fontSize: 14,
-        fontWeight: '700',
-        marginBottom: 2
-    },
-    billMeta: {
-        fontSize: 12
-    },
-    billRight: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8
-    },
-    billAmount: {
-        fontSize: 15,
-        fontWeight: '800'
-    },
-    emptyState: {
-        alignItems: 'center',
-        paddingTop: 60
-    },
-    emptyTitle: {
-        fontSize: 16,
-        fontWeight: '700',
-        marginTop: 12
-    },
-    emptySub: {
-        fontSize: 13,
-        marginTop: 4
-    },
-    loadMore: {
-        alignItems: 'center',
-        paddingVertical: 20
-    },
-    loadMoreText: {
-        color: Colors.light.primary,
-        fontWeight: '600',
-        fontSize: 14
-    },
+    billDot: { width: 8, height: 8, borderRadius: 4 },
+    billRef: { fontSize: 14, fontWeight: '700', marginBottom: 2 },
+    billMeta: { fontSize: 12 },
+    billRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    billAmount: { fontSize: 15, fontWeight: '800' },
+    emptyState: { alignItems: 'center', paddingTop: 60 },
+    emptyTitle: { fontSize: 16, fontWeight: '700', marginTop: 12 },
+    emptySub: { fontSize: 13, marginTop: 4 },
+    loadMore: { alignItems: 'center', paddingVertical: 20 },
+    loadMoreText: { color: Colors.light.primary, fontWeight: '600', fontSize: 14 },
 });

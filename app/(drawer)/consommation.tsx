@@ -12,10 +12,11 @@ import {
     ScrollView,
     Platform,
     Alert,
-    ActivityIndicator,
+    // ActivityIndicator,
 } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { getMonthlyBill } from '@/services/api';
+import Skeleton from '@/components/ui/Skeleton';
 
 const STATS = [
     { label: "Consommation totale", value: "-- kWh", color: Colors.light.primary },
@@ -42,8 +43,8 @@ export default function ConsommationScreen() {
 
     const handleSearch = async () => {
         setLoading(true);
+        setHasSearched(true);
         try {
-            // Utiliser le mois de dateFrom
             const month = `${dateFrom.getFullYear()}-${String(dateFrom.getMonth() + 1).padStart(2, '0')}`;
 
             const data = await getMonthlyBill('261002', '0270100558021', month);
@@ -66,7 +67,6 @@ export default function ConsommationScreen() {
                     { label: "Moyenne journalière", value: `${(d.total_resource / jours).toFixed(1)} kWh`, color: Colors.light.primaryDark },
                     { label: "Coût estimé", value: `${d.total_amount} Ar`, color: Colors.light.primary },
                 ]);
-                setHasSearched(true);
             } else {
                 Alert.alert('Erreur', data.msg || 'Aucune donnée pour cette période.');
             }
@@ -123,20 +123,32 @@ export default function ConsommationScreen() {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={styles.searchBtn}
+                        style={[
+                            styles.searchBtn,
+                            { opacity: loading ? 0.7 : 1 }
+                        ]}
                         onPress={handleSearch}
                         disabled={loading}
                     >
-                        {loading ? (
-                            <ActivityIndicator color="#fff" size="small" />
-                        ) : (
-                            <>
-                                <Feather name="search" size={16} color="#fff" />
-                                <Text style={styles.searchText}>Rechercher</Text>
-                            </>
-                        )}
+                        <Feather name="search" size={16} color="#fff" />
+                        <Text style={styles.searchText}>Rechercher</Text>
                     </TouchableOpacity>
                 </View>
+
+                {/* SKELETON LOADER */}
+                {loading && (
+                    <View style={{ marginTop: 10 }}>
+                        {[1, 2, 3].map((i) => (
+                            <Skeleton
+                                key={i}
+                                width="100%"
+                                height={60}
+                                borderRadius={12}
+                                style={{ marginBottom: 12 }}
+                            />
+                        ))}
+                    </View>
+                )}
 
                 {/* Message si aucune recherche */}
                 {!hasSearched && !loading && (
@@ -146,7 +158,7 @@ export default function ConsommationScreen() {
                 )}
 
                 {/* Résultats */}
-                {hasSearched && stats.map(({ label, value, color }) => (
+                {!loading && hasSearched && stats.map(({ label, value, color }) => (
                     <View
                         key={label}
                         style={[styles.card, { backgroundColor: themeColors.card, borderLeftColor: color }]}

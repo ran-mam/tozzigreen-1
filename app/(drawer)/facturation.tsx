@@ -10,7 +10,7 @@ import { useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View, Alert, ActivityIndicator, TouchableOpacity } from "react-native";
 
 import { calculateBill, issueToken } from '@/services/api';
-
+import Skeleton from '@/components/ui/Skeleton';
 
 const formatNumber = (num: string) => {
     if (!num || num === '--') return '--';
@@ -145,15 +145,20 @@ export default function FacturationScreen() {
 
                     {/* Bouton Calculer */}
                     <TouchableOpacity
-                        style={[styles.calculateBtn, { backgroundColor: Colors.light.primary }]}
+                        style={[
+                            styles.calculateBtn,
+                            {
+                                backgroundColor: loading
+                                    ? Colors.light.primary + "99"
+                                    : Colors.light.primary,
+                            }
+                        ]}
                         onPress={handleCalculate}
                         disabled={loading}
                     >
-                        {loading ? (
-                            <ActivityIndicator color="#fff" size="small" />
-                        ) : (
-                            <Text style={styles.calculateText}>Calculer</Text>
-                        )}
+                        <Text style={styles.calculateText}>
+                            Calculer
+                        </Text>
                     </TouchableOpacity>
 
                     {/* Résultats de l'API */}
@@ -203,12 +208,23 @@ export default function FacturationScreen() {
                         </>
                     )}
 
+                    {/* SKELETON - Pendant le calcul */}
+                    {loading && !factureAPI && (
+                        <View style={{ marginTop: 20 }}>
+                            <Skeleton width="100%" height={20} style={{ marginBottom: 16 }} />
+                            <Skeleton width="100%" height={20} style={{ marginBottom: 16 }} />
+                            <Skeleton width="100%" height={20} style={{ marginBottom: 16 }} />
+                            <Skeleton width="100%" height={28} style={{ marginTop: 8 }} />
+                        </View>
+                    )}
+
                     {/* Message si pas encore calculé */}
                     {!factureAPI && !loading && (
                         <Text style={[styles.emptyText, { color: themeColors.textSecondary }]}>
                             Entrez une quantité et appuyez sur &quot;Calculer&quot;.
                         </Text>
                     )}
+
                 </View>
 
                 {/* Paiement */}
