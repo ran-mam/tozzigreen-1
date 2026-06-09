@@ -9,7 +9,7 @@ import {
     Text,
     TouchableOpacity,
     View,
-    ActivityIndicator,
+    // ActivityIndicator,
     Platform,
     Alert
 } from "react-native";
@@ -319,12 +319,12 @@ export default function HistoriqueScreen() {
             {showFrom && (
                 <DateTimePicker value={dateFrom} mode="date" display="default"
                     onChange={(_, d) => { setShowFrom(Platform.OS === 'ios'); if (d) setDateFrom(d); }}
-                    maximumDate={dateTo} />
+                    maximumDate={dateTo} accentColor={Colors.light.primary} />
             )}
             {showTo && (
                 <DateTimePicker value={dateTo} mode="date" display="default"
                     onChange={(_, d) => { setShowTo(Platform.OS === 'ios'); if (d) setDateTo(d); }}
-                    minimumDate={dateFrom} maximumDate={new Date()} />
+                    minimumDate={dateFrom} maximumDate={new Date()} accentColor={Colors.light.primary} />
             )}
         </View>
     );

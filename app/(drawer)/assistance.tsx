@@ -17,7 +17,10 @@ import {
 } from "react-native";
 
 export default function AssistanceScreen() {
+  const [recipient, setRecipient] = useState("");
+  const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [activeTab, setActiveTab] = useState<"faq" | "form">("faq");
   const router = useRouter();
   const { theme } = useTheme();
   const themeColors = Colors[theme];
@@ -26,13 +29,37 @@ export default function AssistanceScreen() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const handleSend = () => {
-    if (message.trim()) {
-      Alert.alert(
-        "Message envoyé",
-        "Notre équipe vous répondra dans les plus brefs délais.",
-      );
-      setMessage("");
+    if (!recipient.trim()) {
+      Alert.alert("Erreur", "Veuillez entrer une destinataire");
+      return;
     }
+
+    if (!subject.trim()) {
+      Alert.alert("Erreur", "Veuillez entrer l'objet du message");
+      return;
+    }
+
+    if (!message.trim()) {
+      Alert.alert("Erreur", "Veuillez entrer votre message");
+      return;
+    }
+
+    if (message.trim().length < 10) {
+      Alert.alert(
+        "Erreur",
+        "Le message doit contenir au minimum 10 caractères",
+      );
+      return;
+    }
+
+    // Submit to API
+    Alert.alert(
+      "Message envoyé",
+      "Votre message a été envoyé avec succès. Vous pouvez suivre son statut dans l'onglet Support.",
+    );
+    setRecipient("");
+    setSubject("");
+    setMessage("");
   };
 
   const handleCall = () => {
@@ -58,92 +85,274 @@ export default function AssistanceScreen() {
           <View style={{ width: 24 }} />
         </View>
 
-        <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>
-          Comment pouvons-nous vous aider ?
-        </Text>
-
-        {/* Contact rapide */}
-        <View style={styles.contactRow}>
+        {/* Tabs */}
+        <View style={styles.tabsContainer}>
           <TouchableOpacity
-            style={[styles.contactBtn, { backgroundColor: themeColors.card }]}
-            onPress={handleCall}
+            style={[
+              styles.tab,
+              {
+                backgroundColor:
+                  activeTab === "faq" ? BrandColors.primary : themeColors.card,
+                borderBottomColor:
+                  activeTab === "faq" ? BrandColors.primary : "transparent",
+              },
+            ]}
+            onPress={() => setActiveTab("faq")}
           >
-            <Feather name="phone" size={32} color={BrandColors.primary} />
-            <Text style={[styles.contactLabel, { color: themeColors.text }]}>
-              Appeler
+            <Feather
+              name="help-circle"
+              size={18}
+              color={activeTab === "faq" ? "white" : themeColors.textSecondary}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                {
+                  color:
+                    activeTab === "faq" ? "white" : themeColors.textSecondary,
+                },
+              ]}
+            >
+              FAQ
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              {
+                backgroundColor:
+                  activeTab === "form" ? BrandColors.primary : themeColors.card,
+                borderBottomColor:
+                  activeTab === "form" ? BrandColors.primary : "transparent",
+              },
+            ]}
+            onPress={() => setActiveTab("form")}
+          >
+            <Feather
+              name="send"
+              size={18}
+              color={activeTab === "form" ? "white" : themeColors.textSecondary}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                {
+                  color:
+                    activeTab === "form" ? "white" : themeColors.textSecondary,
+                },
+              ]}
+            >
+              Formulaire
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* FAQ */}
-        <Text style={[styles.sectionTitle, { color: themeColors.text }]}>
-          Questions fréquentes
-        </Text>
-        {FAQ.map((item, index) => (
-          <View key={index}>
+        {/* FAQ Tab */}
+        {activeTab === "faq" && (
+          <View style={{ flex: 1, justifyContent: 'space-between' }}>
+            <View>
+              <Text
+                style={[styles.subtitle, { color: themeColors.textSecondary }]}
+              >
+                Comment pouvons-nous vous aider ?
+              </Text>
+
+              {/* Contact rapide */}
+              <View style={styles.contactRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.contactBtn,
+                    { backgroundColor: themeColors.card },
+                  ]}
+                  onPress={handleCall}
+                >
+                  <Feather name="phone" size={32} color={BrandColors.primary} />
+                  <Text
+                    style={[styles.contactLabel, { color: themeColors.text }]}
+                  >
+                    Appeler
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <Text style={[styles.sectionTitle, { color: themeColors.text }]}>
+                Questions fréquentes
+              </Text>
+              {FAQ.map((item, index) => (
+                <View key={index}>
+                  <TouchableOpacity
+                    style={[
+                      styles.faqItem,
+                      { borderBottomColor: themeColors.border },
+                    ]}
+                    onPress={() =>
+                      setExpandedIndex(expandedIndex === index ? null : index)
+                    }
+                  >
+                    <Text
+                      style={[styles.faqQuestion, { color: themeColors.text }]}
+                    >
+                      {item.question}
+                    </Text>
+                    <Feather
+                      name={
+                        expandedIndex === index ? "chevron-up" : "chevron-down"
+                      }
+                      size={20}
+                      color={themeColors.chevron}
+                    />
+                  </TouchableOpacity>
+                  {expandedIndex === index && (
+                    <Text
+                      style={[
+                        styles.faqAnswer,
+                        { color: themeColors.textSecondary },
+                      ]}
+                    >
+                      {item.answer}
+                    </Text>
+                  )}
+                </View>
+              ))}
+
+              <Text style={[styles.footer, { color: themeColors.textSecondary }]}>
+                Service disponible 24h/24 et 7j/7
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {/* Form Tab */}
+        {activeTab === "form" && (
+          <View>
+            {/* Help Icon and Message */}
+            <View style={styles.helpSection}>
+              <View
+                style={[
+                  styles.iconCircle,
+                  { backgroundColor: BrandColors.primary + "15" },
+                ]}
+              >
+                <Feather name="mail" size={40} color={BrandColors.primary} />
+              </View>
+              <Text style={[styles.helpMessage, { color: themeColors.text }]}>
+                Envoyez un message
+              </Text>
+              <Text
+                style={[
+                  styles.helpSubtitle,
+                  { color: themeColors.textSecondary },
+                ]}
+              >
+                Contactez-nous directement
+              </Text>
+            </View>
+
+            {/* Destinataire */}
+            <View style={styles.section}>
+              <Text style={[styles.label, { color: themeColors.text }]}>
+                Destinataire
+              </Text>
+              <TextInput
+                style={[
+                  styles.messageInput,
+                  {
+                    backgroundColor: themeColors.card,
+                    color: themeColors.text,
+                    borderColor: themeColors.border,
+                  },
+                ]}
+                placeholder="Entrez une destinataire"
+                placeholderTextColor={themeColors.textSecondary}
+                value={recipient}
+                onChangeText={setRecipient}
+              />
+            </View>
+
+            {/* Objet */}
+            <View style={styles.section}>
+              <Text style={[styles.label, { color: themeColors.text }]}>
+                Objet
+              </Text>
+              <TextInput
+                style={[
+                  styles.messageInput,
+                  {
+                    backgroundColor: themeColors.card,
+                    color: themeColors.text,
+                    borderColor: themeColors.border,
+                  },
+                ]}
+                placeholder="Sujet du message"
+                placeholderTextColor={themeColors.textSecondary}
+                value={subject}
+                onChangeText={setSubject}
+              />
+            </View>
+
+            {/* Contenu du message */}
+            <View style={styles.section}>
+              <Text style={[styles.label, { color: themeColors.text }]}>
+                Contenu du message
+              </Text>
+              <TextInput
+                style={[
+                  styles.textInput,
+                  {
+                    backgroundColor: themeColors.card,
+                    color: themeColors.text,
+                    borderColor: themeColors.border,
+                  },
+                ]}
+                placeholder="Écrivez votre message ici..."
+                placeholderTextColor={themeColors.textSecondary}
+                multiline={true}
+                numberOfLines={6}
+                value={message}
+                onChangeText={setMessage}
+                textAlignVertical="top"
+              />
+
+              <Text
+                style={[
+                  styles.characterCount,
+                  { color: themeColors.textSecondary },
+                ]}
+              >
+                {message.length} / 1000 caractères
+              </Text>
+            </View>
+
+            {/* Info Box */}
+            <View
+              style={[
+                styles.infoBox,
+                { backgroundColor: BrandColors.primary + "10" },
+              ]}
+            >
+              <Feather name="info" size={20} color={BrandColors.primary} />
+            </View>
+
+            {/* Submit Button */}
             <TouchableOpacity
               style={[
-                styles.faqItem,
-                { borderBottomColor: themeColors.border },
+                styles.submitButton,
+                { backgroundColor: BrandColors.primary },
               ]}
-              onPress={() =>
-                setExpandedIndex(expandedIndex === index ? null : index)
-              }
+              onPress={handleSend}
             >
-              <Text style={[styles.faqQuestion, { color: themeColors.text }]}>
-                {item.question}
-              </Text>
-              <Feather
-                name={expandedIndex === index ? "chevron-up" : "chevron-down"}
-                size={20}
-                color={themeColors.chevron}
-              />
+              <Feather name="send" size={20} color="white" />
+              <Text style={styles.submitButtonText}>Envoyer le message</Text>
             </TouchableOpacity>
-            {expandedIndex === index && (
-              <Text
-                style={[styles.faqAnswer, { color: themeColors.textSecondary }]}
-              >
-                {item.answer}
-              </Text>
-            )}
+
+            <View style={{ height: 24 }} />
+
+            <Text style={[styles.infoText, { color: themeColors.text }]}>
+              Nous répondons à tous les messages dans les 24 heures
+            </Text>
           </View>
-        ))}
-
-        {/* SÉPARATEUR */}
-        <View
-          style={[styles.separator, { backgroundColor: themeColors.border }]}
-        />
-
-        {/* Message */}
-        <Text style={[styles.sectionTitle, { color: themeColors.text }]}>
-          Envoyer un message
-        </Text>
-        <TextInput
-          style={[
-            styles.textArea,
-            {
-              backgroundColor: themeColors.card,
-              color: themeColors.text,
-              borderColor: themeColors.border,
-            },
-          ]}
-          placeholder="Décrivez votre problème..."
-          placeholderTextColor={themeColors.textSecondary}
-          value={message}
-          onChangeText={setMessage}
-          multiline
-          numberOfLines={4}
-        />
-        <TouchableOpacity
-          style={[styles.sendBtn, { backgroundColor: BrandColors.primary }]}
-          onPress={handleSend}
-        >
-          <Text style={styles.sendText}>Envoyer</Text>
-        </TouchableOpacity>
-
-        <Text style={[styles.footer, { color: themeColors.textSecondary }]}>
-          Service disponible 24h/24 et 7j/7
-        </Text>
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -192,6 +401,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 24,
     textAlign: "center",
+  },
+  tabsContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+    gap: 8,
+  },
+  tab: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 12,
+    borderRadius: 8,
+    borderBottomWidth: 2,
+  },
+  tabText: {
+    fontSize: 14,
+    fontWeight: "600",
   },
   contactRow: {
     flexDirection: "row",
@@ -259,6 +487,89 @@ const styles = StyleSheet.create({
   footer: {
     textAlign: "center",
     fontSize: 12,
+    marginTop: 40,
     marginBottom: 40,
+  },
+  /* Form Styles */
+  helpSection: {
+    alignItems: "center",
+    marginBottom: 32,
+    paddingVertical: 24,
+  },
+  iconCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  helpMessage: {
+    fontSize: 22,
+    fontWeight: "600",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  helpSubtitle: {
+    fontSize: 14,
+    textAlign: "center",
+  },
+  section: {
+    marginBottom: 24,
+  },
+  label: {
+    fontSize: 13,
+    marginBottom: 8,
+    fontWeight: "500",
+  },
+  messageInput: {
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 14,
+    borderWidth: 1,
+    marginBottom: 4,
+  },
+  textInput: {
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 14,
+    borderWidth: 1,
+    minHeight: 120,
+    maxHeight: 200,
+  },
+  characterCount: {
+    fontSize: 12,
+    marginTop: 8,
+    alignSelf: "flex-end",
+  },
+  infoBox: {
+    flexDirection: "row",
+    borderRadius: 8,
+    padding: 12,
+    alignItems: "flex-start",
+    marginBottom: 20,
+    gap: 12,
+    display: "none",
+  },
+  infoText: {
+    fontSize: 13,
+    flex: 1,
+    lineHeight: 18,
+  },
+  submitButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    borderRadius: 12,
+    gap: 8,
+    marginBottom: 12,
+  },
+  submitButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

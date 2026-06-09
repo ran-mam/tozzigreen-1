@@ -1,4 +1,5 @@
-import { Colors } from "@/constants/Colors";
+import { BrandColors, Colors } from "@/constants/Colors";
+import { useTheme } from "@/context/ThemeContext";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -15,14 +16,33 @@ export default function SidebarItem({
   active,
   onPress,
 }: SidebarItemProps) {
+  const { theme } = useTheme();
+  const themeColors = Colors[theme];
+
+  // dynamic active background
+  const activeBackground = theme === "dark" ? "#2d2d2d" : "#f0f9e5";
+
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.7}
-      style={[styles.item, active && styles.activeItem]}
+      style={[
+        styles.item,
+        active && {
+          backgroundColor: activeBackground,
+          borderLeftColor: BrandColors.primary,
+        },
+      ]}
     >
       <View style={styles.iconWrap}>{icon}</View>
-      <Text style={[styles.label, active && styles.activeLabel]}>{label}</Text>
+      <Text
+        style={[
+          styles.label,
+          { color: themeColors.textSecondary }, // inactive → textSecondary
+          active && { color: BrandColors.primary }, // active → brand primary
+        ]}
+      >
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 }
@@ -37,10 +57,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: "transparent",
   },
-  activeItem: {
-    backgroundColor: "#f0f9e5",
-    borderLeftColor: Colors.primary,
-  },
   iconWrap: {
     width: 20,
     height: 20,
@@ -50,10 +66,5 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#444",
-  },
-  activeLabel: {
-    fontWeight: "700",
-    color: Colors.dark,
   },
 });

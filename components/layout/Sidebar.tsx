@@ -11,14 +11,15 @@ import {
   View,
 } from "react-native";
 import SidebarItem from "./SidebarItem";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NAV_ITEMS = [
   { id: "index", label: "Accueil", icon: "home" },
   { id: "historique", label: "Historique", icon: "clock" },
   { id: "notification", label: "Notifications", icon: "bell" },
   { id: "settings", label: "Paramètres", icon: "settings" },
+  { id: "supports", label: "Support", icon: "message-circle" },
 ] as const;
+
 
 export default function Sidebar(props: any) {
   const router = useRouter();
@@ -78,8 +79,7 @@ export default function Sidebar(props: any) {
         <TouchableOpacity
           style={styles.logout}
           activeOpacity={0.7}
-          onPress={async () => {
-            await AsyncStorage.removeItem('token');
+          onPress={() => {
             router.replace("/login" as any);
           }}
         >
